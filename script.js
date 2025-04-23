@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const POSTS_PER_PAGE = 20;
     let currentPage = 1;
 
-    const JSON_URL = 'data\Topic_CRBA\Expats\expats_CRBA_latest_28_posts.json';
+    const JSON_URL = 'data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json';
     const MAX_CONTENT_HEIGHT_BEFORE_READ_MORE = 400;
 
     async function fetchData() {
