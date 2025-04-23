@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await response.json();
 
-            if (data && Array.isArray(data.record)) {
+            if (data && Array.isArray(data)) {
                  postsData.push(...data.record);
                  sortPostsData('comments_high');
                  sortSelect.value = 'comments_high';
