@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding the CRBA Process - Archive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet"> -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+
+<body>
+
+    <header class="page-header">
+        <div class="container">
+            <div class="logo">ARCHIVO</div>
+            <nav class="main-nav">
+                <a href="https://www.reddit.com/r/expats/"><span>R/</span>expats</a>
+                <a href="https://www.reddit.com/r/expatsmexico/" class="active"><span>R/</span>expatsmexico</a>
+                <a href="https://www.reddit.com/r/immigration/"><span>R/</span>immigration</a>
+                <a href="https://www.reddit.com/r/USCIS/"><span>R/</span>USCIS</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Entendiendo el Informe Consular de Nacimiento en el Extranjero (CRBA)</h1>
+                <p>Esta iniciativa de investigación explora las experiencias, los desafíos y las discusiones
+                    comunitarias en torno al proceso de solicitud de CRBA para ciudadanos estadounidenses nacidos en el
+                    extranjero. Estamos recopilando información de diversas comunidades en línea para comprender mejor
+                    el proceso.</p>
+            </div>
+            <div class="hero-image">
+                <img src="C:\Users\erick\OneDrive\Escritorio\ResearchLP\frank-mckenna-sjS4pYowbKw-unsplash.jpg"
+                    alt="Child holding an American flag">
+                <!-- Replace placeholder-girl-flag.jpg with the actual image URL or path -->
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="content-header">
+                <div class="topic-nav">
+                    <a href="#">R/expats</a>
+                    <a href="#" class="active">R/expatsmexico</a>
+                    <a href="#">R/immigration</a>
+                    <a href="#">R/USCIS</a>
+                </div>
+            </div>
+            <div class="sort-options">
+                <label for="sort">Ordenar:</label>
+                <select id="sort" name="sort">
+                    <option value="comments_high">Más comentado primero</option>
+                    <option value="comments_low">Menos comentado primero</option>
+                    <option value="date_newer">Más antiguo primero</option>
+                    <option value="date_older">Más reciente primero</option>
+                    <option value="president_one">Presidente de EE.UU.: Joe Biden</option>
+                    <option value="president_two">Presidente de EE.UU.: Donald Trump</option>
+                </select>
+            </div>
+            <div class="post-list-container">
+                <div class="post-list" id="postList">
+                </div>
+                <div class="pagination-controls" id="paginationControls">
+                </div>
+            </div>
+    <template id="postTemplate">
+        <article class="post-item">
+            <div class="post-number"></div>
+            <div class="post-content">
+                <h2 class="post-title"></h2>
+                <div class="post-body">
+                </div>
+                <a href="#" class="read-more" style="display: none;">Leer Mas</a>
+                <div class="post-meta">
+                    <span class="meta-comments"><i class="fas fa-comment"></i>✍🏼 Commentarios: <span></span></span>
+                    <span class="meta-location"><i class="fas fa-map-marker-alt"></i> Geografia del post: <span></span></span>
+                    <span class="meta-sex"><i class="fas fa-user">👨🏻 Sexo del usuario: <span></span></span>
+                    <span class="meta-president"><i class="fas fa-file-alt"></i> Presidente en curso: <span></span></span>
+                    <span class="meta-document"><i class="fas fa-file-docu"></i>🗎 Documento: <span></span></span>
+                    <span class="meta-created"><i class="fas fa-calendar-alt"></i>📅 Creado: <span></span></span>
+                </div>
+            </div>
+        </article>
+    </template>
+        </div>
+    </main>
+
+ 
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,608 @@
+/* --- START OF FILE style.css --- */
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* font-family: 'Lato', sans-serif; */
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa; /* Light background for the page */
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.page-header {
+    background-color: #fff;
+    padding: 10px 0;
+    /* border-bottom: 1px solid #e0e0e0; */
+}
+
+/* Removed fixed width for h1 to allow responsiveness */
+/* h1{
+    display: flex;
+    width: 600px;
+} */
+
+
+/* Removed fixed width for p to allow responsiveness */
+/* .hero-text p{
+    display: flex;
+    width: 600px;
+} */
+
+.page-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 10px; /* Add gap for wrapped items */
+}
+
+.logo {
+    font-family: "Inter", sans-serif;
+    font-size: 2.5em;
+    font-weight: 900;
+    color: #ff6600; /* Orange color */
+    flex-shrink: 0; /* Prevent logo from shrinking too much */
+}
+
+.main-nav {
+    display: flex; /* Use flex for nav items */
+    flex-wrap: wrap; /* Allow nav items to wrap */
+    justify-content: center; /* Center nav items when wrapped */
+    gap: 5px 15px; /* Row and column gap */
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #555;
+    /* margin-left: 20px; */ /* Replaced by gap */
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text within a link from wrapping */
+}
+
+/* .main-nav a:hover,
+.main-nav a.active {
+    background-color: #ff6600;
+    color: #fff;
+} */
+
+
+/* Hero Section */
+.hero {
+    background-color: #fff; /* White background for hero */
+    padding: 40px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: center; /* Center content when wrapped */
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 300px; /* Prevent text block from getting too narrow */
+    max-width: 600px; /* Maintain max width from original design idea */
+}
+
+.hero-text h1 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.hero-text p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    flex-basis: 300px; /* Adjust as needed */
+    text-align: center;
+    max-width: 100%; /* Ensure it doesn't overflow container */
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto; /* Changed from fixed height for responsiveness */
+    max-height: 450px; /* Optional: limit height */
+    border-radius: 8px;
+    object-fit: cover; /* Ensure image covers the area well */
+    display: block; /* Remove extra space below image */
+    margin: 0 auto; /* Center image if its container is wider */
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 0;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between; /* Will likely be overridden on mobile */
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 15px; /* Add space between wrapped items */
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.topic-nav {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 10px; /* Space between buttons */
+    flex-grow: 1; /* Allow nav to take available space */
+    justify-content: center; /* Center buttons initially */
+}
+
+
+.topic-nav a {
+     text-decoration: none;
+    color: #555;
+    /* margin-right: 15px; */ /* Replaced by gap */
+    font-weight: 700;
+    padding: 8px 15px;
+    border-radius: 20px; /* Pill shape */
+    background-color: #eee;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 0.9em;
+    white-space: nowrap; /* Prevent text wrap inside button */
+}
+
+.topic-nav a:hover {
+    background-color: #ddd;
+}
+
+.topic-nav a.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.sort-options{
+    padding: 0px 0px 16px 0px;
+    flex-shrink: 0; /* Prevent sort options from shrinking too much */
+}
+.sort-options label {
+    margin-right: 5px;
+    font-weight: 700;
+    color: #555;
+}
+
+.sort-options select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    min-width: 150px; /* Give select some minimum width */
+}
+
+/* Post List */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.post-item {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    position: relative; /* For positioning the archive tag */
+    flex-wrap: wrap; /* Allow wrapping number and content */
+}
+
+.post-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #aaa;
+    align-self: flex-start; /* Align number to the top */
+    background-color: #eee;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.post-content {
+    flex-grow: 1;
+    flex-basis: 300px; /* Allow content to take space but wrap if needed */
+    min-width: 0; /* Prevent flex item overflow issues */
+}
+
+.post-content h2 {
+    font-family: "Inter", sans-serif;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 700;
+}
+
+.post-content p {
+    font-family: 'Lato', sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.read-more {
+    display: inline-block;
+    text-decoration: none;
+    color: #ff6600;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.post-meta {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.85em;
+    color: #777;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 15px; /* Row and column gap for meta items */
+    width: 100%; /* Ensure meta takes full width below content */
+}
+
+.post-meta span {
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
+
+a span {
+    color: #ff6600;
+    font-weight: 900;
+}
+
+.post-meta i {
+    color: #999; /* Lighter color for icons */
+}
+
+/* Font Awesome uses its own font-family, this might override if needed */
+/* .fas{
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
+} */
+
+.archive-tag {
+    /* position: absolute; */ /* Changed for better flow */
+    float:right; /* Avoid float for layout */
+    /* top: 15px; */
+    /* right: 15px; */
+    margin-left: auto; /* Push to the right within flex context */
+    align-self: flex-start; /* Align with top of post content */
+    margin-top: 0; /* Adjust spacing if needed */
+    border-radius: 20px;
+    background-color: #ff6600;
+    color: #fff;
+    padding: 5px 12px;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevent tag text wrapping */
+    order: 99; /* Try to keep it last if items wrap unexpectedly */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Footer */
+.page-footer {
+    background-color: #333;
+    color: #ccc;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* ------------------------------------ */
+/* Responsive Adjustments (Tablet/Mobile) */
+/* ------------------------------------ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px; /* Slightly reduce side padding */
+    }
+
+    /* Header Adjustments */
+    .page-header .container {
+        justify-content: center; /* Center logo and nav container */
+        /* flex-direction: column; /* Uncomment if stacking is preferred */
+        /* align-items: center; */
+    }
+
+    .logo {
+        font-size: 2em; /* Slightly smaller logo */
+        text-align: center; /* Center logo text if it wraps */
+        flex-basis: 100%; /* Make logo take full width if stacking */
+        margin-bottom: 10px; /* Add space below logo if stacking */
+    }
+
+    .main-nav {
+        justify-content: center; /* Ensure nav items are centered */
+        width: 100%; /* Nav takes full width */
+    }
+    .main-nav a {
+        font-size: 0.95em; /* Slightly smaller nav links */
+        padding: 6px 12px;
+    }
+
+    /* Hero Adjustments */
+    .hero {
+        padding: 30px 0;
+    }
+    .hero-content {
+        flex-direction: column; /* Stack text and image */
+        text-align: center;
+        gap: 20px;
+    }
+
+    .hero-text {
+        /* max-width: 100%; */ /* Allow text to use full width */
+        min-width: unset; /* Remove min-width */
+        order: 1; /* Ensure text comes first */
+    }
+
+    .hero-text h1 {
+        font-size: 1.8em; /* Slightly smaller heading */
+        width: auto; /* Override potential fixed widths */
+    }
+
+    .hero-text p {
+        font-size: 1em; /* Slightly smaller paragraph */
+        width: auto; /* Override potential fixed widths */
+    }
+
+    .hero-image {
+        flex-basis: auto; /* Reset basis */
+        width: 90%; /* Allow image to be wider */
+        max-width: 350px; /* Limit max image width */
+        order: 2; /* Ensure image comes second */
+    }
+     .hero-image img {
+         height: auto; /* Ensure aspect ratio is maintained */
+     }
+
+    /* Main Content Header Adjustments */
+    .content-header {
+        flex-direction: column; /* Stack nav and sort options */
+        gap: 20px;
+        align-items: stretch; /* Make items take full width */
+        padding: 15px;
+    }
+
+     .topic-nav {
+        width: 100%;
+        justify-content: center; /* Center the topic buttons */
+        gap: 8px;
+    }
+     .topic-nav a {
+        font-size: 0.85em; /* Smaller topic buttons */
+        padding: 7px 12px;
+     }
+
+    .sort-options {
+        text-align: center; /* Center sort options */
+        padding-bottom: 0; /* Remove bottom padding */
+        width: 100%; /* Make it take full width */
+    }
+    .sort-options select {
+        width: 80%; /* Make select wider for easier tapping */
+        max-width: 300px; /* Limit width */
+        padding: 8px 12px; /* Slightly larger padding */
+    }
+
+    /* Post List Adjustments */
+     .post-item {
+        flex-direction: column; /* Stack number and content */
+        align-items: flex-start; /* Align items to start */
+        padding: 15px; /* Reduce padding */
+        gap: 15px; /* Adjust gap */
+    }
+     .post-number {
+        align-self: flex-start; /* Keep number at the start */
+        margin-bottom: 0; /* Remove bottom margin as gap handles spacing */
+        /* align-self: center; */ /* Alternative: center the number */
+        /* margin-bottom: 15px; */
+    }
+
+    .post-content {
+        flex-basis: auto; /* Reset basis */
+        width: 100%; /* Ensure content takes full width */
+    }
+
+     .post-content h2 {
+         font-size: 1.2em; /* Adjust heading size */
+     }
+
+     .archive-tag {
+         /* position: static; */ /* Keep it relative to flow */
+         /* float: none; */
+         margin-left: 0; /* Reset margin */
+         margin-top: 10px; /* Add space above tag */
+         align-self: flex-start; /* Align tag to the left */
+         order: 3; /* Ensure it comes after number and content */
+     }
+
+     .post-meta {
+         gap: 8px 12px; /* Adjust gap */
+         font-size: 0.8em; /* Slightly smaller meta */
+         order: 4; /* Ensure meta comes last */
+     }
+}
+
+
+/* Optional: Adjustments for very small screens */
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.8em;
+    }
+    .hero-text h1 {
+        font-size: 1.6em;
+    }
+    .post-content h2 {
+        font-size: 1.1em;
+    }
+    .topic-nav a {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+    .container {
+        padding: 0 10px;
+    }
+}
+
+/* --- END OF FILE style.css --- */
+
+/* .post-list-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+} */
+
+
+.post-list {
+    margin-bottom: 30px;
+}
+
+.post-item {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 25px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden; /* Important for potential float issues */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.post-body {
+    /* ... other styles like margin, color, max-height, overflow ... */
+    margin-bottom: 15px;
+    color: #444;
+    max-height: 400px; /* Adjust as needed */
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.5s ease-out;
+
+    /* Add this line to make the browser respect whitespace and newlines */
+    white-space: pre-wrap;
+    /* Optionally add word-wrap if long unbroken strings are possible */
+    word-wrap: break-word;
+}
+/* Style for the body when it's truncated (has Read More) */
+.post-body.truncated::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px; /* Height of the fade */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    pointer-events: none; /* Allows clicks to pass through */
+}
+
+/* State when expanded */
+.post-body.expanded {
+    max-height: 2000px; /* Set to a large enough value */
+    overflow: visible;
+    transition: max-height 0.7s ease-in;
+}
+.post-body.expanded::after {
+    display: none; /* Hide fade when expanded */
+}
+
+
+.read-more {
+    display: inline-block; /* Changed from none initially */
+    margin-bottom: 10px;
+    color: #ff6600;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+/* .post-meta {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+} */
+
+
+
+/* Pagination Styles */
+.pagination-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background-color: #ff6600;
+}
+
+.pagination-controls button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.pagination-controls .page-info {
+    display: inline-block;
+    margin: 0 15px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Hide utility class */
+.hidden {
+    display: none;
+}
