@@ -1,0 +1,26 @@
+Add us_president:
+Determine the US President in office based on the post's created_utc timestamp.
+Use these rules:
+If created_utc falls between January 20, 2021 (UTC timestamp 1611100800) and January 20, 2025 (UTC timestamp 1737398400), the president is "Joe Biden".
+Otherwise, the president is "Donald Trump".
+Add the key us_president with the determined name as its string value.
+Add location:
+Read the selftext and title to identify mentions of the poster's geographical location (country and, if available, state/city/region).
+Add the key location.
+If a location is found:
+Assign an object {"country": "CountryName", "state": "StateName"} as the value.
+If only the country is identifiable, use {"country": "CountryName", "state": null}.
+Example: If the text mentions "Mexico City", use {"country": "Mexico", "state": "Mexico City"}. If it mentions only "Mexico", use {"country": "Mexico", "state": null}.
+If no location information can be reasonably inferred from the post, assign null as the value for the location key.
+Add sex:
+Infer the likely sex of the post author by analyzing the selftext for contextual clues (e.g., "my wife", "my husband", "as a mother", pronouns if explicitly used in context).
+Add the key sex.
+Assign "Hombre" or "Mujer" as the string value if the sex can be reasonably inferred.
+If the author's sex cannot be determined from the text, assign null as the value.
+Add document:
+Identify the specific official document(s) that are the main subject of discussion or inquiry in the title and selftext (e.g., "CRBA", "hospital birth certificate", "transcripts", "apostille", "birth certificate translation", "passport").
+Add the key document.
+Assign the name(s) of the identified document(s) as a string value. If multiple related documents are mentioned as the core topic, you can list them concisely (e.g., "CRBA / proof of physical presence").
+If the post discusses the CRBA process generally without focusing on one specific document, or if no particular document is referenced, assign null as the value.
+Output:
+Return the complete, modified JSON array, where each original post object now includes the added us_president, location, sex, and document keys with their corresponding values determined according to the instructions above. The structure should match the final example JSON provided in our previous interactions.
