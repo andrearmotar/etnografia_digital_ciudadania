@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,32 +52,32 @@
     <main class="main-content">
         <div class="container">
             <div class="content-header">
-                <div class="topic-nav" id="topicNav">  <!-- Added ID for easier selection -->
-                    <!-- Added data-topic attributes and adjusted initial active class -->
+                <div class="topic-nav" id="topicNav">  <!-- Subreddit/Topic Navigation -->
                     <a href="#" class="active" data-topic="expats">R/expats</a>
                     <a href="#" data-topic="expatsmexico">R/expatsmexico</a>
                     <a href="#" data-topic="immigration">R/immigration</a>
                     <a href="#" data-topic="uscis">R/USCIS</a>
                 </div>
 
-                <!-- START: Added Topic Toggle Button -->
-                <div class="topic-toggle-container">
-                    <button type="button" id="topicToggleButton" class="topic-toggle-button" data-state="crba">
+                <!-- START: Updated Theme Toggle Container -->
+                <div class="theme-toggle-container" id="themeToggleContainer">
+                    <p>Busqueda: </p>
+                    <button type="button" class="theme-toggle-option active-theme" data-state="crba">
                         CRBA
                     </button>
+                    <button type="button" class="theme-toggle-option" data-state="givenBirth">
+                        Given birth in Mexico
+                    </button>
                 </div>
-                <!-- END: Added Topic Toggle Button -->
+                <!-- END: Updated Theme Toggle Container -->
 
-                <div class="sort-options">
+                <div class="sort-options"> <!-- Sorting Options -->
                     <label for="sort">Ordenar:</label>
                     <select id="sort" name="sort">
                         <option value="comments_high">Más comentado primero</option>
                         <option value="comments_low">Menos comentado primero</option>
-                        <option value="date_newer">Más antiguo primero</option> <!-- Note: date_newer means newer dates first (more recent) -->
-                        <option value="date_older">Más reciente primero</option> <!-- Note: date_older means older dates first (less recent) -->
-                        <!-- Consider renaming options for clarity if needed -->
-                        <!-- <option value="date_recent">Más reciente primero</option> -->
-                        <!-- <option value="date_oldest">Más antiguo primero</option> -->
+                        <option value="date_newer">Más antiguo primero</option>
+                        <option value="date_older">Más reciente primero</option>
                         <option value="president_one">Presidente de EE.UU.: Joe Biden</option>
                         <option value="president_two">Presidente de EE.UU.: Donald Trump</option>
                     </select>

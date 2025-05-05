@@ -1,3 +1,5 @@
+
+
 /* Basic Reset */
 * {
     margin: 0;
@@ -162,7 +164,6 @@ body {
 
 
 /* --- Hero Section --- */
-/* ... (keep existing hero styles) ... */
 .hero {
     background-color: var(--bg-white);
     padding: 60px 0;
@@ -210,7 +211,6 @@ body {
 
 
 /* --- Main Content --- */
-/* ... (keep existing main content styles) ... */
 .main-content {
     padding: 50px 0;
 }
@@ -234,9 +234,11 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    flex-grow: 1; /* Allow topic nav to grow */
+    /* Removed flex-grow to allow toggle/sort to align right easier */
+    /* flex-grow: 1;  */
     justify-content: flex-start; /* Align left */
     order: 1; /* Ensure it comes first visually */
+    margin-right: auto; /* Push toggle/sort to the right */
 }
 .topic-nav a {
     text-decoration: none;
@@ -264,19 +266,20 @@ body {
     transform: translateY(0);
 }
 
-/* START: Added styles for Topic Toggle */
-.topic-toggle-container {
+/* START: Updated styles for Theme Toggle */
+.theme-toggle-container {
     display: flex;
     align-items: center;
+    gap: 10px; /* Gap between the two buttons */
     flex-shrink: 0; /* Prevent shrinking */
     order: 2; /* Place between nav and sort */
 }
 
-.topic-toggle-button {
-    background-color: var(--primary-color-light);
-    color: var(--primary-color-dark);
-    border: 1px solid var(--primary-color);
-    padding: 10px 20px;
+.theme-toggle-option {
+    background-color: var(--bg-white);
+    color: var(--text-medium);
+    border: 1px solid var(--border-color);
+    padding: 10px 18px; /* Adjust padding */
     border-radius: var(--border-radius-pill);
     font-family: inherit;
     font-size: 0.9em;
@@ -284,26 +287,36 @@ body {
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform 0.2s ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow 0.2s ease;
 }
 
-.topic-toggle-button:hover {
+.theme-toggle-option:hover:not(.active-theme) { /* Hover only on inactive */
+    background-color: var(--border-color-light);
+    border-color: #bbb;
+    color: var(--text-dark);
+}
+
+.theme-toggle-option.active-theme {
     background-color: var(--primary-color);
     color: var(--bg-white);
     border-color: var(--primary-color-dark);
-    transform: translateY(-2px);
+    font-weight: 700;
+    cursor: default; /* Indicate it's selected */
+    box-shadow: 0 2px 4px rgba(255, 102, 0, 0.2);
 }
 
-.topic-toggle-button:focus {
+.theme-toggle-option:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.3);
+     /* Add focus ring only if not active, or a different style for active */
+}
+.theme-toggle-option:focus:not(.active-theme) {
+     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4); /* Standard blue focus */
+}
+.theme-toggle-option.active-theme:focus {
+     box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.4); /* Orange focus for active */
 }
 
-.topic-toggle-button:active {
-    transform: translateY(0);
-    background-color: var(--primary-color-dark);
-}
-/* END: Added styles for Topic Toggle */
+/* END: Updated styles for Theme Toggle */
 
 .sort-options {
     flex-shrink: 0; /* Prevent shrinking */
@@ -311,7 +324,7 @@ body {
     align-items: center;
     gap: 8px;
     order: 3; /* Ensure it comes last visually */
-    margin-left: auto; /* Push to the right if space allows */
+    /* margin-left: auto; Removed this, handled by topic-nav margin-right */
 }
 .sort-options label {
     font-weight: 600;
@@ -348,7 +361,6 @@ body {
 
 
 /* --- Post List --- */
-/* ... (keep existing post list styles) ... */
 .post-list {
     display: flex;
     flex-direction: column;
@@ -406,7 +418,7 @@ body {
     color: var(--text-medium);
     margin-bottom: 20px;
     line-height: 1.7;
-    max-height: 120px;
+    max-height: 120px; /* Default max height for truncation */
     overflow: hidden;
     position: relative;
     transition: max-height 0.6s ease-out;
@@ -424,7 +436,7 @@ body {
     pointer-events: none;
 }
 .post-body.expanded {
-    max-height: 2000px;
+    max-height: 2000px; /* Arbitrarily large height when expanded */
     overflow: visible;
     transition: max-height 0.8s ease-in;
 }
@@ -432,11 +444,11 @@ body {
     display: none;
 }
 .read-more {
-    display: inline-block;
+    display: inline-block; /* Changed from none by JS if needed */
     text-decoration: none;
     color: var(--primary-color);
     font-weight: 700;
-    margin-top: auto;
+    margin-top: auto; /* Pushes meta down if content is short */
     margin-bottom: 15px;
     cursor: pointer;
     align-self: flex-start;
@@ -448,7 +460,7 @@ body {
     text-decoration: underline;
 }
 .post-meta {
-    margin-top: auto;
+    margin-top: auto; /* Pushes to bottom */
     padding-top: 15px;
     border-top: 1px solid var(--border-color-light);
     font-size: 0.85em;
@@ -463,19 +475,19 @@ body {
     align-items: center;
     gap: 6px;
 }
-.post-meta span > span {
+.post-meta span > span { /* Style for the actual value */
     color: var(--text-medium);
     font-weight: 500;
 }
 .post-meta i {
     color: var(--text-light);
     font-size: 1.1em;
-    width: 16px;
+    width: 16px; /* Give icon consistent width */
     text-align: center;
 }
 .archive-tag {
-    margin-left: auto;
-    align-self: flex-start;
+    margin-left: auto; /* Push to the right */
+    align-self: flex-start; /* Align to top */
     border-radius: var(--border-radius-pill);
     background-color: var(--primary-color);
     color: #fff;
@@ -484,16 +496,15 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
-    order: -1; /* Keep this to appear before content in default layout */
+    order: -1; /* Keep this to appear before content in default flex layout */
     flex-shrink: 0;
     height: fit-content;
     line-height: 1.2;
-    /* Adjust position if needed next to post number if flex-direction changes */
+    /* Position may need adjustment if flex-direction changes */
 }
 
 
 /* --- Footer --- */
-/* ... (keep existing footer styles) ... */
 .page-footer {
     background-color: var(--text-dark);
     color: #adb5bd;
@@ -505,7 +516,6 @@ body {
 
 
 /* --- Pagination --- */
-/* ... (keep existing pagination styles) ... */
 .pagination-controls {
     text-align: center;
     margin: 40px 0 20px;
@@ -558,7 +568,7 @@ body {
     }
     /* Allow header content (logo, nav) to wrap if needed */
     .page-header .container {
-        /* flex-wrap: wrap; /* Already set in base */
+        /* flex-wrap: wrap; Already set in base */
     }
     /* Ensure nav aligns left below logo when wrapped */
     .main-nav {
@@ -579,10 +589,13 @@ body {
         justify-content: center; /* Center topic links */
         width: 100%; /* Take full width */
         order: 1;
+        margin-right: 0; /* Reset margin */
     }
-    .topic-toggle-container {
+    .theme-toggle-container {
         order: 2;
         margin-top: 15px; /* Add space when wrapped */
+        justify-content: center; /* Center toggle buttons */
+        width: 100%;
     }
     .sort-options {
         order: 3;
@@ -718,6 +731,7 @@ body {
         justify-content: center;
         gap: 8px;
         order: 1; /* Explicit order */
+        margin-right: 0; /* Ensure reset */
     }
     .topic-nav a {
         font-size: 0.85em;
@@ -726,13 +740,14 @@ body {
     .topic-nav a:hover {
         transform: none;
     }
-    .topic-toggle-container {
+    .theme-toggle-container {
         width: 100%;
         justify-content: center;
         margin: 0; /* Reset margin */
         order: 2; /* Explicit order */
+        gap: 8px; /* Reduce gap */
     }
-    .topic-toggle-button {
+    .theme-toggle-option {
          width: auto; /* Adjust width as needed */
          padding: 8px 15px;
          font-size: 0.85em;
@@ -758,7 +773,7 @@ body {
     .archive-tag { order: 0; /* Place archive tag near number */ margin-bottom: 10px; margin-left: 0; align-self: flex-start; padding: 5px 12px; font-size: 0.7em; }
     .post-content { flex-basis: auto; width: 100%; order: 1; } /* Content after number/tag */
     .post-content h2 { font-size: 1.3em; }
-    .post-body { font-size: 0.95em; max-height: 100px; }
+    .post-body { font-size: 0.95em; max-height: 100px; } /* Adjust mobile truncation */
     .post-body.truncated::after { height: 30px; }
     .read-more { order: 2; } /* Read more after body */
     .post-meta { gap: 8px 15px; font-size: 0.8em; order: 3; } /* Meta after read more */
@@ -780,7 +795,7 @@ body {
     .hero-text p { font-size: 1em; }
     .post-content h2 { font-size: 1.2em; }
     .topic-nav a { padding: 7px 12px; font-size: 0.8em; }
-    .topic-toggle-button { padding: 7px 12px; font-size: 0.8em; }
+    .theme-toggle-option { padding: 7px 12px; font-size: 0.8em; }
     .sort-options label { font-size: 0.85em; }
     .sort-options select { font-size: 0.9em; }
     .post-item { padding: 15px; }
@@ -789,3 +804,4 @@ body {
     .pagination-controls button { padding: 6px 10px; font-size: 0.85em; }
     .pagination-controls .page-info { font-size: 0.85em; margin: 0 5px; }
 }
+
