@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
@@ -6,16 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Check if essential elements exist ---
     if (!menuToggle || !mainNav) {
         console.error("Menu toggle button or navigation element not found. Cannot initialize mobile menu.");
-        // Don't return here if other parts of the script need to run
-        // Only return if the *entire* script relies on these elements
     }
 
-    const toggleIcon = menuToggle?.querySelector('i'); // Optional chaining for safety
+    const toggleIcon = menuToggle?.querySelector('i');
     let isTransitioning = false;
-    const transitionDuration = 400; // Match CSS --nav-transition-duration in ms
+    const transitionDuration = 400;
 
     // --- Helper function to find focusable elements ---
     const getFocusableElements = (parent) => {
+        // ... (keep existing function)
         if (!parent) return [];
         return Array.from(
             parent.querySelectorAll(
@@ -26,12 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function to Open Menu (Mobile Only Logic) ---
     const openMenu = () => {
-        if (isTransitioning || !mainNav || !menuToggle) return; // Check elements again
+        // ... (keep existing function)
+        if (isTransitioning || !mainNav || !menuToggle) return;
         isTransitioning = true;
 
-        // **Important:** Set display for transition calculation, but rely on CSS for base state
-        mainNav.style.display = 'flex'; // Temporarily ensure it's flex for transition
-        mainNav.offsetHeight; // Force reflow
+        mainNav.style.display = 'flex';
+        mainNav.offsetHeight;
 
         mainNav.classList.add('nav-open');
         menuToggle.setAttribute('aria-expanded', 'true');
@@ -56,10 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function to Close Menu (Mobile Only Logic) ---
     const closeMenu = () => {
-        if (isTransitioning || !mainNav || !menuToggle) return; // Check elements again
+        // ... (keep existing function)
+        if (isTransitioning || !mainNav || !menuToggle) return;
         isTransitioning = true;
 
-        mainNav.classList.remove('nav-open'); // CSS transitions will hide it visually
+        mainNav.classList.remove('nav-open');
         menuToggle.setAttribute('aria-expanded', 'false');
         body.classList.remove('body-no-scroll');
 
@@ -73,24 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         menuToggle.focus();
 
-        // **Important:** Remove the part that sets display:none AFTER transition
-        // Let the CSS handle the final collapsed state (max-height: 0, opacity: 0 etc)
         setTimeout(() => {
-            // Reset display style ONLY if it was set by openMenu
-            // We check if it's mobile view implicitly by checking if toggle is visible
             if (window.getComputedStyle(menuToggle).display !== 'none') {
-                 mainNav.style.display = ''; // Reset inline style, let CSS rule take over
+                 mainNav.style.display = '';
             }
             isTransitioning = false;
         }, transitionDuration);
     };
 
     // --- Event Handler for Toggle Button Click ---
-    // Only add listener if the toggle button exists
     if (menuToggle) {
         menuToggle.addEventListener('click', (event) => {
-             // No need to check isTransitioning here, open/close functions handle it
-            const isNavOpen = mainNav?.classList.contains('nav-open'); // Use optional chaining
+            // ... (keep existing function)
+            const isNavOpen = mainNav?.classList.contains('nav-open');
             if (isNavOpen) {
                 closeMenu();
             } else {
@@ -101,8 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Handler for Escape Key ---
     const handleEscapeKey = (event) => {
+        // ... (keep existing function)
         if (event.key === 'Escape') {
-            if (mainNav?.classList.contains('nav-open')) { // Optional chaining
+            if (mainNav?.classList.contains('nav-open')) {
                  closeMenu();
             }
         }
@@ -110,94 +108,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Handler for Click Outside ---
     const handleClickOutside = (event) => {
-        if (mainNav?.classList.contains('nav-open') && // Optional chaining
+        // ... (keep existing function)
+        if (mainNav?.classList.contains('nav-open') &&
             !mainNav.contains(event.target) &&
-            !menuToggle?.contains(event.target)) // Optional chaining
+            !menuToggle?.contains(event.target))
         {
              closeMenu();
-             // Consider stopping propagation only if necessary
-             // event.stopPropagation();
-             // event.preventDefault();
         }
     };
 
     // --- Initial Setup (REVISED) ---
-    // Let CSS handle initial state based on screen size.
-    // We just ensure ARIA attributes and listeners are clean on load.
-    if (mainNav && menuToggle) { // Only run if elements exist
-        mainNav.classList.remove('nav-open'); // Ensure class is not present initially
-        mainNav.style.display = ''; // REMOVE initial inline style override
+    if (mainNav && menuToggle) {
+        // ... (keep existing function)
+        mainNav.classList.remove('nav-open');
+        mainNav.style.display = '';
         menuToggle.setAttribute('aria-expanded', 'false');
         if (toggleIcon) {
             toggleIcon.classList.remove('fa-times');
             toggleIcon.classList.add('fa-bars');
         }
         body.classList.remove('body-no-scroll');
-        // Remove any stray listeners
         document.removeEventListener('keydown', handleEscapeKey);
         document.removeEventListener('click', handleClickOutside, true);
     }
 
 
     // ======================================================
-    // ===== POST LOADING & SORTING LOGIC (Unaffected) =====
+    // ===== POST LOADING & SORTING LOGIC (MODIFIED) =====
     // ======================================================
     const postList = document.getElementById('postList');
     const paginationControls = document.getElementById('paginationControls');
     const postTemplate = document.getElementById('postTemplate');
     const sortSelect = document.getElementById('sort');
+    const topicNav = document.getElementById('topicNav'); // Get the topic nav container
+
     const postsData = [];
     const POSTS_PER_PAGE = 20;
     let currentPage = 1;
+    const MAX_CONTENT_HEIGHT_BEFORE_READ_MORE = 120; // Adjusted to match CSS
 
-    // const JSON_URL = "https://andrearmotar.github.io/etnografia_digital_ciudadania/data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json";
-    const JSON_URL = "data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json"
-    const MAX_CONTENT_HEIGHT_BEFORE_READ_MORE = 400; // Adjust as needed based on CSS
+    // --- Define Data Sources ---
+    const topicDataSources = {
+        "expats": "data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json",
+        "expatsmexico": "", // No source specified
+        "immigration": "data/Topic_CRBA/Immigration/Immigration_CRBA.json",
+        "uscis": "data/Topic_CRBA/USCIS/USCIS_CRBA_latest.json"
+    };
 
-    async function fetchData() {
-        // Check if elements needed for post display exist
-        if (!postList || !paginationControls || !postTemplate || !sortSelect) {
-            console.warn("One or more elements required for post display are missing.");
-            // Decide how to handle this - maybe display a message?
-            if (postList) postList.innerHTML = '<p style="text-align: center; color: orange;">Required page elements missing.</p>';
+    // --- Function to Fetch Data (Modified to accept URL) ---
+    async function fetchData(url) {
+        if (!url) {
+            console.warn("No URL provided to fetchData.");
+            if (postList) postList.innerHTML = '<p style="text-align: center; color: orange;">No data source selected.</p>';
+            if (paginationControls) paginationControls.innerHTML = ''; // Clear pagination
+            postsData.length = 0; // Clear data array
             return;
         }
 
+        // Check if elements needed for post display exist
+        if (!postList || !paginationControls || !postTemplate || !sortSelect) {
+            console.warn("One or more elements required for post display are missing.");
+            if (postList) postList.innerHTML = '<p style="text-align: center; color: orange;">Required page elements missing.</p>';
+             if (paginationControls) paginationControls.innerHTML = '';
+            return;
+        }
+
+        // Show loading state
+        postList.innerHTML = '<p style="text-align: center; color: var(--text-light);">Cargando posts...</p>';
+        paginationControls.innerHTML = ''; // Clear pagination during load
+
         try {
-            const response = await fetch(JSON_URL);
+            console.log(`Fetching data from: ${url}`); // Log the URL being fetched
+            const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                 // Provide more specific error messages
+                 let errorMsg = `HTTP error! status: ${response.status}`;
+                 if (response.status === 404) {
+                     errorMsg = `Error: Data file not found at ${url}`;
+                 }
+                 throw new Error(errorMsg);
             }
             const data = await response.json();
 
-            // Assuming data itself is the array now, based on previous usage
             if (data && Array.isArray(data)) {
                  postsData.length = 0; // Clear previous data
                  postsData.push(...data);
-                 sortPostsData('comments_high'); // Default sort
-                 sortSelect.value = 'comments_high'; // Set dropdown to default
-                 renderPage(1); // Start on page 1
+                 console.log(`Fetched ${postsData.length} posts.`);
+                 sortPostsData(sortSelect.value); // Apply current sort
+                 renderPage(1); // Start on page 1 of the new data
             } else {
                  console.error("Fetched data is not in the expected array format.", data);
                  postList.innerHTML = '<p style="color: red; text-align: center;">Error en el formato de los datos recibidos.</p>';
+                 postsData.length = 0; // Clear data array on format error
             }
 
         } catch (error) {
             console.error("Could not fetch posts:", error);
-            postList.innerHTML = '<p style="color: red; text-align: center;">Fallo la carga de los Posts.</p>';
+            postList.innerHTML = `<p style="color: red; text-align: center;">Fallo la carga de los Posts. ${error.message || ''}</p>`;
+            postsData.length = 0; // Clear data array on fetch error
         }
     }
 
+    // --- Function to Render a Page ---
     function renderPage(page) {
-        // Ensure elements exist before proceeding
+        // ... (keep existing function, but ensure it handles empty postsData gracefully)
         if (!postList || !paginationControls) return;
 
         currentPage = page;
         postList.innerHTML = ''; // Clear previous posts
 
-        if (postsData.length === 0) {
-             postList.innerHTML = '<p style="text-align: center;">No posts to display.</p>'; // Provide feedback
-             renderPaginationControls(); // Render (empty) controls or hide them
+        if (!postsData || postsData.length === 0) {
+             // Display message if it wasn't already set by fetchData error/no data
+             if (!postList.querySelector('p')) { // Avoid overwriting specific error messages
+                 postList.innerHTML = '<p style="text-align: center;">No hay posts para mostrar para este tema.</p>';
+             }
+             renderPaginationControls(); // Render empty controls
              return;
         }
 
@@ -207,9 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         postsToRender.forEach((post, index) => {
             const overallPostNumber = start + index + 1;
-            if (post && typeof post === 'object') { // Basic check for valid post object
+            if (post && typeof post === 'object') {
                 const postElement = createPostElement(post, overallPostNumber);
-                if (postElement) { // Check if element creation was successful
+                if (postElement) {
                      postList.appendChild(postElement);
                 }
             } else {
@@ -217,27 +242,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Delay slightly to ensure elements are in the DOM for height checks
         setTimeout(() => {
              checkAndEnableReadMore();
-        }, 50); // A small delay
+        }, 50);
 
 
         renderPaginationControls();
-        // Scroll to top unless navigating via history (back/forward button)
         if (!window.history.state || !window.history.state.manual) {
              window.scrollTo(0, 0);
         }
     }
 
+    // --- Function to Create Post Element ---
     function createPostElement(postData, postNumber) {
-         // Ensure template exists
+        // ... (keep existing function)
         if (!postTemplate) return null;
 
         try {
             const clone = postTemplate.content.cloneNode(true);
             const postItem = clone.querySelector('.post-item');
-            // Ensure main elements exist in the template clone
              if (!postItem || !clone.querySelector('.post-content')) {
                  console.error("Template is missing required elements (.post-item or .post-content)");
                  return null;
@@ -249,17 +272,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const postBody = clone.querySelector('.post-body');
             if (postBody) {
-                postBody.innerHTML = postData.selftext || ''; // Use innerHTML carefully if data source isn't trusted
-                postBody.dataset.fulltext = postData.selftext || ''; // Store original for potential use
+                // Basic text sanitization (replace potential HTML tags with entities)
+                // If you trust the source or need HTML, use innerHTML carefully
+                // postBody.innerHTML = postData.selftext || '';
+                const textContent = postData.selftext || '';
+                // Simple check to prevent injecting script tags if using innerHTML is desired
+                // const sanitizedText = textContent.replace(/<script.*?>.*?<\/script>/gi, '');
+                // postBody.innerHTML = sanitizedText;
+                postBody.textContent = textContent; // Safer default
+                postBody.dataset.fulltext = textContent;
 
-                // Initial setup for truncation - let checkAndEnableReadMore handle visibility
-                // postBody.style.maxHeight = `${MAX_CONTENT_HEIGHT_BEFORE_READ_MORE}px`;
-                // postBody.style.overflow = 'hidden';
+                // Initial style for truncation check
+                postBody.style.maxHeight = `${MAX_CONTENT_HEIGHT_BEFORE_READ_MORE}px`;
+                postBody.style.overflow = 'hidden';
             }
 
-            // Safely access nested properties and elements
             const metaCommentsSpan = clone.querySelector('.meta-comments span');
-            if (metaCommentsSpan) metaCommentsSpan.textContent = postData.num_comments ?? 'N/A'; // Use nullish coalescing
+            if (metaCommentsSpan) metaCommentsSpan.textContent = postData.num_comments ?? 'N/A';
 
             const metaLocationSpan = clone.querySelector('.meta-location span');
             if (metaLocationSpan) {
@@ -284,125 +313,111 @@ document.addEventListener('DOMContentLoaded', () => {
             const metaCreatedSpan = clone.querySelector('.meta-created span');
             if (metaCreatedSpan) metaCreatedSpan.textContent = postData.created_readable_utc || 'N/A';
 
-            // Add Archive Tag Logic Here if needed
             const archiveTag = clone.querySelector('.archive-tag');
             if (archiveTag) {
-                if (postData.is_archived) { // Assuming your data has an 'is_archived' field
-                     archiveTag.style.display = 'inline-block'; // Or 'block' depending on CSS
-                     archiveTag.textContent = postData.archive_reason || 'Archived'; // Customize text
+                if (postData.is_archived) {
+                     archiveTag.style.display = 'inline-block';
+                     archiveTag.textContent = postData.archive_reason || 'Archived';
                 } else {
                     archiveTag.style.display = 'none';
                 }
             }
-
-
             return postItem;
         } catch (error) {
             console.error("Error creating post element:", error, "Post Data:", postData);
-            return null; // Return null if creation fails
+            return null;
         }
     }
 
+     // --- Function to Check and Enable Read More ---
      function checkAndEnableReadMore() {
+        // ... (keep existing function, ensure MAX_CONTENT_HEIGHT_BEFORE_READ_MORE is correct)
          if (!postList) return;
         const postBodies = postList.querySelectorAll('.post-body');
         postBodies.forEach(body => {
             const readMoreLink = body.nextElementSibling;
-            // Verify it's the correct link
             if (!readMoreLink || !readMoreLink.classList.contains('read-more')) {
-                // console.warn("Read more link not found or incorrect element after post body.");
                  return;
             }
 
-            // Reset styles temporarily to measure full height accurately
-            const wasTruncated = body.classList.contains('truncated');
             const wasExpanded = body.classList.contains('expanded');
-            body.classList.remove('truncated', 'expanded'); // Remove state classes
-            body.style.maxHeight = 'none'; // Allow full height measurement
+            body.classList.remove('truncated', 'expanded');
+            body.style.maxHeight = 'none'; // Measure full height
 
-            const scrollHeight = body.scrollHeight; // Actual content height
+            const scrollHeight = body.scrollHeight;
             const isOverflowing = scrollHeight > MAX_CONTENT_HEIGHT_BEFORE_READ_MORE;
 
-            // console.log(`Checking body: scrollHeight=${scrollHeight}, MAX=${MAX_CONTENT_HEIGHT_BEFORE_READ_MORE}, overflowing=${isOverflowing}, wasExpanded=${wasExpanded}`);
-
-
             if (isOverflowing) {
+                readMoreLink.style.display = 'inline-block'; // Always show if overflowing
                 if (wasExpanded) {
-                    // Re-apply expanded state (no max-height)
                     body.classList.add('expanded');
-                     body.style.maxHeight = 'none'; // Explicitly keep full height
-                    readMoreLink.style.display = 'inline-block';
+                    body.style.maxHeight = 'none'; // Keep expanded
                     readMoreLink.textContent = 'Leer Menos';
-                     body.classList.remove('truncated'); // Ensure not truncated
                 } else {
-                     // Apply truncated state
-                     body.style.maxHeight = `${MAX_CONTENT_HEIGHT_BEFORE_READ_MORE}px`;
-                     body.classList.add('truncated');
-                     readMoreLink.style.display = 'inline-block';
-                     readMoreLink.textContent = 'Leer Mas';
-                     body.classList.remove('expanded'); // Ensure not expanded
+                    body.classList.add('truncated');
+                    body.style.maxHeight = `${MAX_CONTENT_HEIGHT_BEFORE_READ_MORE}px`; // Apply truncation
+                    readMoreLink.textContent = 'Leer Mas';
                 }
             } else {
-                 // Not overflowing, hide the link and ensure full visibility
-                 body.style.maxHeight = 'none'; // Ensure full height visible
+                 // Not overflowing, hide link, ensure full visibility
+                 body.style.maxHeight = 'none';
                  body.classList.remove('truncated', 'expanded');
                  readMoreLink.style.display = 'none';
             }
         });
     }
 
-
+    // --- Function to Render Pagination Controls ---
     function renderPaginationControls() {
+        // ... (keep existing function)
         if (!paginationControls) return;
         paginationControls.innerHTML = '';
-        if (!postsData || postsData.length === 0) return;
+        if (!postsData || postsData.length === 0) return; // Don't render if no data
 
         const totalPages = Math.ceil(postsData.length / POSTS_PER_PAGE);
-        if (totalPages <= 1) return; // No controls needed for one page
+        if (totalPages <= 1) return;
 
         const createButton = (text, page, disabled = false) => {
             const button = document.createElement('button');
             button.textContent = text;
             button.disabled = disabled;
-            button.type = 'button'; // Explicitly set type
+            button.type = 'button';
             button.addEventListener('click', () => {
-                 // Optional: Add state for history API if needed
-                 // window.history.pushState({ manual: true }, '', `?page=${page}`);
                  renderPage(page);
             });
             return button;
         };
 
-        // Previous Button
         paginationControls.appendChild(createButton('Anterior', currentPage - 1, currentPage === 1));
 
-        // Page Info Span
         const pageInfo = document.createElement('span');
         pageInfo.className = 'page-info';
         pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
         paginationControls.appendChild(pageInfo);
 
-        // Next Button
         paginationControls.appendChild(createButton('Siguiente', currentPage + 1, currentPage === totalPages));
     }
 
-    // Event delegation for Read More links
+    // --- Event delegation for Read More links ---
      if (postList) {
+         // ... (keep existing function)
         postList.addEventListener('click', (event) => {
             if (event.target.classList.contains('read-more')) {
                 event.preventDefault();
                 const link = event.target;
-                // Find the previous sibling that is the post-body
                 let postBody = link.previousElementSibling;
                 while (postBody && !postBody.classList.contains('post-body')) {
                      postBody = postBody.previousElementSibling;
                 }
 
-
                 if (postBody) {
-                    postBody.classList.toggle('expanded');
-                    // Rerun check to update the button text and body state correctly
-                    checkAndEnableReadMore(); // This might need refinement if check causes issues
+                    const isCurrentlyExpanded = postBody.classList.contains('expanded');
+                     // Toggle expanded state first
+                     postBody.classList.toggle('expanded', !isCurrentlyExpanded);
+                     postBody.classList.toggle('truncated', isCurrentlyExpanded); // Add truncated if it was expanded
+
+                     // Then re-run check to update styles and text correctly
+                     checkAndEnableReadMore(); // This will set maxHeight and button text
                 } else {
                     console.error("Could not find post-body element preceding read-more link.");
                 }
@@ -410,42 +425,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
      }
 
+     // --- Function to Parse Date ---
      function parseDate(dateString) {
-        if (!dateString) return 0;
-        try {
-            // Attempt direct parsing first
-             let date = new Date(dateString);
-             // Check if parsing resulted in a valid date
-             if (!isNaN(date.getTime())) {
-                 return date.getTime();
-             }
-             // Add fallback parsing if needed (e.g., specific formats)
-             // Example: const parts = dateString.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-             // if (parts) { date = new Date(parts[3], parts[1] - 1, parts[2]); }
+        // ... (keep existing function)
+         if (!dateString) return 0;
+         try {
+              let date = new Date(dateString);
+              if (!isNaN(date.getTime())) {
+                  return date.getTime();
+              }
+              // Add fallbacks if needed
+              console.warn(`Could not parse date string: ${dateString}`);
+              return 0;
+         } catch (e) {
+             console.error(`Error parsing date string: ${dateString}`, e);
+             return 0;
+         }
+     }
 
-             if (isNaN(date.getTime())) {
-                  console.warn(`Could not parse date string: ${dateString}`);
-                  return 0; // Return 0 or Date.now() or some default?
-             }
-             return date.getTime(); // Should be valid here if not NaN
-        } catch (e) {
-            console.error(`Error parsing date string: ${dateString}`, e);
-            return 0; // Return 0 on error
-        }
-    }
-
+    // --- Function to Sort Posts ---
     function sortPostsData(sortBy) {
-        // Defensive copy before sorting if original order might be needed elsewhere
-        // const sortedData = [...postsData];
+        // ... (keep existing function)
+        // Ensure sorting happens only if there's data
+        if (!postsData || postsData.length === 0) return;
+
         postsData.sort((a, b) => {
-            // Handle null/undefined posts gracefully
             if (!a && !b) return 0;
-            if (!a) return 1; // Sort nulls/undefined to the end
+            if (!a) return 1;
             if (!b) return -1;
 
-            // Helper functions for safe access and parsing
-            const safeNumComments = (post) => Number(post?.num_comments ?? 0); // Ensure number
-            const safePresident = (post) => post?.us_president?.trim() ?? ''; // Trim whitespace
+            const safeNumComments = (post) => Number(post?.num_comments ?? 0);
+            const safePresident = (post) => post?.us_president?.trim() ?? '';
             const safeDate = (post) => parseDate(post?.created_readable_utc);
 
             try {
@@ -454,37 +464,35 @@ document.addEventListener('DOMContentLoaded', () => {
                         return safeNumComments(b) - safeNumComments(a);
                     case 'comments_low':
                         return safeNumComments(a) - safeNumComments(b);
-                    case 'date_newer': // Most recent first
-                        return safeDate(b) - safeDate(a); // Corrected order
-                    case 'date_older': // Oldest first
-                        return safeDate(a) - safeDate(b); // Corrected order
-                    case 'president_one': { // Use block scope for const
+                    case 'date_newer': // Newer dates (higher timestamp) first
+                        return safeDate(b) - safeDate(a);
+                    case 'date_older': // Older dates (lower timestamp) first
+                        return safeDate(a) - safeDate(b);
+                    case 'president_one': {
                         const presA1 = safePresident(a) === 'Joe Biden';
                         const presB1 = safePresident(b) === 'Joe Biden';
-                         // Prioritize Biden posts, otherwise maintain relative order (0)
-                        if (presA1 && !presB1) return -1; // a comes first
-                        if (!presA1 && presB1) return 1;  // b comes first
-                        return 0; // Both are or aren't Biden
+                        if (presA1 && !presB1) return -1;
+                        if (!presA1 && presB1) return 1;
+                        return 0;
                     }
-                    case 'president_two': { // Use block scope for const
+                    case 'president_two': {
                          const presA2 = safePresident(a) === 'Donald Trump';
                          const presB2 = safePresident(b) === 'Donald Trump';
-                        // Prioritize Trump posts
                         if (presA2 && !presB2) return -1;
                         if (!presA2 && presB2) return 1;
                         return 0;
                     }
                     default:
-                        return 0; // No sorting if criteria is unknown
+                        return 0;
                 }
             } catch (sortError) {
                 console.error("Error during sorting:", sortError, "Criteria:", sortBy, "Posts:", a, b);
-                return 0; // Prevent breaking on sort error
+                return 0;
             }
         });
     }
 
-    // Add event listener only if sortSelect exists
+    // --- Event Listener for Sorting Dropdown ---
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
             const sortBy = sortSelect.value;
@@ -495,7 +503,61 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Sort select element not found.");
     }
 
-    // Initial data fetch
-    fetchData();
+    // --- Event Listener for Topic Navigation ---
+    if (topicNav) {
+        topicNav.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default anchor link behavior
+
+            const clickedLink = event.target.closest('a'); // Find the nearest anchor parent
+            if (!clickedLink || !topicNav.contains(clickedLink)) {
+                return; // Exit if click wasn't on a link within the nav
+            }
+
+            const currentActive = topicNav.querySelector('a.active');
+            if (clickedLink === currentActive) {
+                return; // Do nothing if the already active link is clicked
+            }
+
+            const topicKey = clickedLink.dataset.topic;
+            if (!topicKey) {
+                console.warn("Clicked topic link is missing data-topic attribute.");
+                return;
+            }
+
+            const newUrl = topicDataSources[topicKey];
+
+            // Update active state
+            if (currentActive) {
+                currentActive.classList.remove('active');
+            }
+            clickedLink.classList.add('active');
+
+            // Reset sorting to default and current page
+            sortSelect.value = 'comments_high'; // Reset dropdown to default
+            currentPage = 1;
+
+            // Fetch data for the new topic
+            if (newUrl) {
+                 fetchData(newUrl);
+                 sortSelect.disabled = false; // Re-enable sort if it was disabled
+            } else {
+                 console.log(`No data source defined for topic: ${topicKey}`);
+                 postsData.length = 0; // Clear data
+                 postList.innerHTML = `<p style="text-align: center;">No hay posts disponibles para el tema: ${clickedLink.textContent}.</p>`;
+                 paginationControls.innerHTML = ''; // Clear pagination
+                 sortSelect.disabled = true; // Disable sort if no data
+            }
+        });
+    } else {
+        console.warn("Topic navigation element (#topicNav) not found.");
+    }
+
+
+    // --- Initial Data Fetch ---
+    // Find the initially active topic link and fetch its data
+    const initialActiveTopicLink = topicNav?.querySelector('a.active');
+    const initialTopicKey = initialActiveTopicLink?.dataset.topic || 'expats'; // Default to 'expats' if none active
+    const initialUrl = topicDataSources[initialTopicKey] || topicDataSources['expats']; // Fallback
+    fetchData(initialUrl); // Fetch initial data
 
 }); // End DOMContentLoaded
