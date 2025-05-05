@@ -134,26 +134,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const paginationControls = document.getElementById('paginationControls');
     const postTemplate = document.getElementById('postTemplate');
     const sortSelect = document.getElementById('sort');
-    const topicNav = document.getElementById('topicNav'); // Get the topic nav container
+    const topicNav = document.getElementById('topicNav');
+    const topicToggleButton = document.getElementById('topicToggleButton'); // Get the new toggle button
 
     const postsData = [];
     const POSTS_PER_PAGE = 20;
     let currentPage = 1;
     const MAX_CONTENT_HEIGHT_BEFORE_READ_MORE = 120; // Adjusted to match CSS
 
-    // --- Define Data Sources ---
-    const topicDataSources = {
+    // --- Define Data Sources Sets ---
+    const crbaDataSources = {
         "expats": "data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json",
-        "expatsmexico": "", // No source specified
+        "expatsmexico": "", // No source specified for this sub in CRBA topic
         "immigration": "data/Topic_CRBA/Immigration/Immigration_CRBA.json",
         "uscis": "data/Topic_CRBA/USCIS/USCIS_CRBA_latest.json"
     };
 
-    // --- Function to Fetch Data (Modified to accept URL and scroll preference) ---
+    const givenBirthDataSources = {
+        "expats": "data/Topic_GivenBirthOnMexico/Expats/Expats_given birth in mexico_latest.json",
+        "expatsmexico": "data/Topic_GivenBirthOnMexico/mexicoexpats/mexicoexpats_given birth in mexico_latest.json",
+        "immigration": "data/Topic_GivenBirthOnMexico/Immigration/Immigration_given birth in mexico_latest.json",
+        "uscis": "data/Topic_GivenBirthOnMexico/USCIS/USCIS_given birth in mexico_latest_posts.json"
+    };
+
+    let currentDataSources = crbaDataSources; // Start with CRBA data sources
+
+    // --- Function to Fetch Data (Uses currentDataSources implicitly via callers) ---
     async function fetchData(url, scrollToTopOnRender = true) {
         if (!url) {
             console.warn("No URL provided to fetchData.");
-            if (postList) postList.innerHTML = '<p style="text-align: center; color: orange;">No data source selected.</p>';
+            const activeTopicLink = topicNav?.querySelector('a.active');
+            const topicName = activeTopicLink?.textContent || 'el tema seleccionado';
+            const themeName = topicToggleButton?.textContent || 'este tema';
+            if (postList) postList.innerHTML = `<p style="text-align: center; color: orange;">No hay datos disponibles para ${topicName} sobre ${themeName}.</p>`;
             if (paginationControls) paginationControls.innerHTML = '';
             postsData.length = 0;
             if(sortSelect) sortSelect.disabled = true; // Disable sort if no source
@@ -186,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data && Array.isArray(data)) {
-                 postsData.length = 0;
+                 postsData.length = 0; // Clear previous data
                  postsData.push(...data);
                  console.log(`Fetched ${postsData.length} posts.`);
                  sortPostsData(sortSelect.value); // Apply current sort
@@ -215,8 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
         postList.innerHTML = ''; // Clear previous posts
 
         if (!postsData || postsData.length === 0) {
-            if (!postList.querySelector('p')) { // Avoid overwriting specific error/loading messages
-                postList.innerHTML = '<p style="text-align: center;">No hay posts para mostrar para este tema.</p>';
+            // Check if a specific message isn't already there (like from fetchData's empty URL case)
+            if (!postList.querySelector('p')) {
+                const activeTopicLink = topicNav?.querySelector('a.active');
+                const topicName = activeTopicLink?.textContent || 'el tema seleccionado';
+                const themeName = topicToggleButton?.textContent || 'este tema';
+                postList.innerHTML = `<p style="text-align: center;">No hay posts para mostrar para ${topicName} sobre ${themeName}.</p>`;
             }
             renderPaginationControls(); // Render (empty) controls
             return;
@@ -248,14 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Modified Scroll Logic ---
         // Scroll to top ONLY if scrollToTop is true
         if (scrollToTop) {
-             console.log("Scrolling to top"); // Optional: for debugging
+             // console.log("Scrolling to top"); // Optional: for debugging
              window.scrollTo(0, 0);
         } else {
-             console.log("Skipping scroll to top"); // Optional: for debugging
+             // console.log("Skipping scroll to top"); // Optional: for debugging
         }
     }
 
-    // --- Function to Create Post Element ---
+    // --- Function to Create Post Element (No changes needed here) ---
     function createPostElement(postData, postNumber) {
         if (!postTemplate) return null;
 
@@ -326,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-     // --- Function to Check and Enable Read More ---
+     // --- Function to Check and Enable Read More (No changes needed here) ---
      function checkAndEnableReadMore() {
          if (!postList) return;
         const postBodies = postList.querySelectorAll('.post-body');
@@ -371,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Function to Render Pagination Controls (Modified for scroll behavior) ---
+    // --- Function to Render Pagination Controls (No changes needed here) ---
     function renderPaginationControls() {
         if (!paginationControls) return;
         paginationControls.innerHTML = '';
@@ -405,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paginationControls.appendChild(createButton('Siguiente', currentPage + 1, currentPage === totalPages));
     }
 
-    // --- Event delegation for Read More links ---
+    // --- Event delegation for Read More links (No changes needed here) ---
      if (postList) {
         postList.addEventListener('click', (event) => {
             if (event.target.classList.contains('read-more')) {
@@ -432,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
      }
 
-     // --- Function to Parse Date ---
+     // --- Function to Parse Date (No changes needed here) ---
      function parseDate(dateString) {
          if (!dateString) return 0;
          try {
@@ -450,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
          }
      }
 
-    // --- Function to Sort Posts ---
+    // --- Function to Sort Posts (No changes needed here) ---
     function sortPostsData(sortBy) {
         if (!postsData || postsData.length === 0) return; // Don't sort if no data
 
@@ -480,14 +497,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         const presB1 = safePresident(b) === 'Joe Biden';
                         if (presA1 && !presB1) return -1;
                         if (!presA1 && presB1) return 1;
-                        return 0;
+                        return 0; // Maintain original order if presidents match or neither match
                     }
                     case 'president_two': {
                          const presA2 = safePresident(a) === 'Donald Trump';
                          const presB2 = safePresident(b) === 'Donald Trump';
                         if (presA2 && !presB2) return -1;
                         if (!presA2 && presB2) return 1;
-                        return 0;
+                        return 0; // Maintain original order if presidents match or neither match
                     }
                     default:
                         return 0;
@@ -499,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Event Listener for Sorting Dropdown (Modified for scroll behavior) ---
+    // --- Event Listener for Sorting Dropdown (No changes needed here) ---
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
             const sortBy = sortSelect.value;
@@ -511,7 +528,20 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Sort select element not found.");
     }
 
-    // --- Event Listener for Topic Navigation (Modified for scroll behavior) ---
+    // --- Function to get current active topic URL ---
+    function getCurrentTopicUrl() {
+        const activeTopicLink = topicNav?.querySelector('a.active');
+        if (activeTopicLink) {
+            const currentTopicKey = activeTopicLink.dataset.topic;
+            return currentDataSources[currentTopicKey]; // Use the *current* data source set
+        }
+        // Fallback to default topic if none active (should ideally not happen after init)
+        console.warn("No active topic link found, falling back to 'expats'");
+        const defaultTopicKey = 'expats';
+        return currentDataSources[defaultTopicKey];
+    }
+
+    // --- Event Listener for Topic Navigation (MODIFIED to use currentDataSources) ---
     if (topicNav) {
         topicNav.addEventListener('click', (event) => {
             event.preventDefault(); // Prevent default anchor link behavior
@@ -532,7 +562,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const newUrl = topicDataSources[topicKey];
+            // *** Use currentDataSources to find the URL ***
+            const newUrl = currentDataSources[topicKey];
 
             // Update active state
             if (currentActive) {
@@ -541,35 +572,86 @@ document.addEventListener('DOMContentLoaded', () => {
             clickedLink.classList.add('active');
 
             // Reset sorting dropdown and current page number (fetchData will handle rendering page 1)
-            sortSelect.value = 'comments_high';
+            if (sortSelect) sortSelect.value = 'comments_high'; // Reset sort on topic change
             currentPage = 1;
 
-            // Fetch data for the new topic
-            if (newUrl) {
-                 // --- Call fetchData WITHOUT scrolling to top ---
-                 fetchData(newUrl, false);
-                 // sortSelect should be re-enabled/disabled inside fetchData based on results
-            } else {
-                 // Handle topics with no data source
-                 console.log(`No data source defined for topic: ${topicKey}`);
-                 postsData.length = 0; // Clear data
-                 postList.innerHTML = `<p style="text-align: center;">No hay posts disponibles para el tema: ${clickedLink.textContent}.</p>`;
-                 paginationControls.innerHTML = ''; // Clear pagination
-                 sortSelect.disabled = true; // Disable sort if no data
-            }
+            // Fetch data for the new topic using the correct source set
+            // No need to check if newUrl exists here, fetchData handles it
+            fetchData(newUrl, false); // Don't scroll to top when changing sub-topic
+
         });
     } else {
         console.warn("Topic navigation element (#topicNav) not found.");
     }
 
+    // --- Event Listener for the Topic Toggle Button ---
+    if (topicToggleButton && topicNav) { // Ensure both exist
+        topicToggleButton.addEventListener('click', () => {
+            const currentState = topicToggleButton.dataset.state;
+            let newState, newText;
 
-    // --- Initial Data Fetch (Modified for scroll behavior) ---
-    // Find the initially active topic link and fetch its data
-    const initialActiveTopicLink = topicNav?.querySelector('a.active');
-    const initialTopicKey = initialActiveTopicLink?.dataset.topic || 'expats'; // Default to 'expats' if none active
-    const initialUrl = topicDataSources[initialTopicKey] || topicDataSources['expats']; // Fallback
-    // --- Call fetchData WITH scrolling to top (default behavior) ---
-    fetchData(initialUrl, true); // Or just fetchData(initialUrl);
+            if (currentState === 'crba') {
+                newState = 'givenBirth';
+                newText = 'Given birth in Mexico';
+                currentDataSources = givenBirthDataSources; // Switch data source set
+            } else {
+                newState = 'crba';
+                newText = 'CRBA';
+                currentDataSources = crbaDataSources; // Switch back
+            }
+
+            // Update button appearance
+            topicToggleButton.dataset.state = newState;
+            topicToggleButton.textContent = newText;
+
+            // Reset sort dropdown and page number
+            if (sortSelect) sortSelect.value = 'comments_high';
+            currentPage = 1;
+
+            // Re-fetch data for the *currently selected* subreddit using the *new* data source set
+            const urlToFetch = getCurrentTopicUrl(); // Get URL based on active link and new source set
+            console.log(`Topic theme toggled to "${newText}". Fetching data for active sub...`);
+            fetchData(urlToFetch, false); // Fetch, but don't scroll to top
+
+        });
+    } else {
+        if (!topicToggleButton) console.warn("Topic toggle button (#topicToggleButton) not found.");
+        if (!topicNav) console.warn("Topic navigation element (#topicNav) not found for toggle interaction.");
+    }
+
+
+    // --- Initial Data Fetch (MODIFIED to use currentDataSources) ---
+    function initializePage() {
+         // Find the initially active topic link and fetch its data using the default (CRBA) source
+         const initialActiveTopicLink = topicNav?.querySelector('a.active');
+         let initialTopicKey = 'expats'; // Default if no active link found
+         if (initialActiveTopicLink) {
+             initialTopicKey = initialActiveTopicLink.dataset.topic || 'expats';
+         } else if (topicNav) {
+             // Attempt to set the first link as active if none is
+             const firstLink = topicNav.querySelector('a');
+             if (firstLink) {
+                 firstLink.classList.add('active');
+                 initialTopicKey = firstLink.dataset.topic || 'expats';
+                 console.warn("No initial active topic link found, activating the first one:", initialTopicKey);
+             }
+         }
+
+         // *** Use currentDataSources (which defaults to crbaDataSources) ***
+         const initialUrl = currentDataSources[initialTopicKey];
+
+         console.log(`Initial page load. Theme: ${topicToggleButton?.textContent || 'CRBA'}. Topic: ${initialTopicKey}. URL: ${initialUrl || 'None'}`);
+         fetchData(initialUrl, true); // Initial load *should* scroll to top
+    }
+
+    // Ensure all elements are potentially ready before initializing
+    if (topicNav && topicToggleButton && sortSelect && postList && paginationControls && postTemplate) {
+        initializePage();
+    } else {
+        console.error("One or more essential elements missing, cannot initialize page correctly.");
+        // Display an error message to the user maybe?
+        if(postList) postList.innerHTML = '<p style="color: red; text-align: center;">Error: Failed to initialize page components.</p>';
+    }
 
 }); // End DOMContentLoaded
 

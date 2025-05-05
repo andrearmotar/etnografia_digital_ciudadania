@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,20 +60,29 @@
                     <a href="#" data-topic="immigration">R/immigration</a>
                     <a href="#" data-topic="uscis">R/USCIS</a>
                 </div>
-            </div>
-            <div class="sort-options">
-                <label for="sort">Ordenar:</label>
-                <select id="sort" name="sort">
-                    <option value="comments_high">Más comentado primero</option>
-                    <option value="comments_low">Menos comentado primero</option>
-                    <option value="date_newer">Más antiguo primero</option> <!-- Note: date_newer means newer dates first (more recent) -->
-                    <option value="date_older">Más reciente primero</option> <!-- Note: date_older means older dates first (less recent) -->
-                    <!-- Consider renaming options for clarity if needed -->
-                    <!-- <option value="date_recent">Más reciente primero</option> -->
-                    <!-- <option value="date_oldest">Más antiguo primero</option> -->
-                    <option value="president_one">Presidente de EE.UU.: Joe Biden</option>
-                    <option value="president_two">Presidente de EE.UU.: Donald Trump</option>
-                </select>
+
+                <!-- START: Added Topic Toggle Button -->
+                <div class="topic-toggle-container">
+                    <button type="button" id="topicToggleButton" class="topic-toggle-button" data-state="crba">
+                        CRBA
+                    </button>
+                </div>
+                <!-- END: Added Topic Toggle Button -->
+
+                <div class="sort-options">
+                    <label for="sort">Ordenar:</label>
+                    <select id="sort" name="sort">
+                        <option value="comments_high">Más comentado primero</option>
+                        <option value="comments_low">Menos comentado primero</option>
+                        <option value="date_newer">Más antiguo primero</option> <!-- Note: date_newer means newer dates first (more recent) -->
+                        <option value="date_older">Más reciente primero</option> <!-- Note: date_older means older dates first (less recent) -->
+                        <!-- Consider renaming options for clarity if needed -->
+                        <!-- <option value="date_recent">Más reciente primero</option> -->
+                        <!-- <option value="date_oldest">Más antiguo primero</option> -->
+                        <option value="president_one">Presidente de EE.UU.: Joe Biden</option>
+                        <option value="president_two">Presidente de EE.UU.: Donald Trump</option>
+                    </select>
+                </div>
             </div>
             <div class="post-list-container">
                 <div class="post-list" id="postList">

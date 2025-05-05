@@ -222,10 +222,10 @@ body {
 }
 .content-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Keep space-between */
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 20px; /* Adjust gap as needed */
     margin-bottom: 35px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--border-color-light);
@@ -234,8 +234,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    flex-grow: 1;
-    justify-content: flex-start;
+    flex-grow: 1; /* Allow topic nav to grow */
+    justify-content: flex-start; /* Align left */
+    order: 1; /* Ensure it comes first visually */
 }
 .topic-nav a {
     text-decoration: none;
@@ -262,11 +263,55 @@ body {
     box-shadow: 0 2px 4px rgba(255, 102, 0, 0.3);
     transform: translateY(0);
 }
+
+/* START: Added styles for Topic Toggle */
+.topic-toggle-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    order: 2; /* Place between nav and sort */
+}
+
+.topic-toggle-button {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    border: 1px solid var(--primary-color);
+    padding: 10px 20px;
+    border-radius: var(--border-radius-pill);
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform 0.2s ease;
+}
+
+.topic-toggle-button:hover {
+    background-color: var(--primary-color);
+    color: var(--bg-white);
+    border-color: var(--primary-color-dark);
+    transform: translateY(-2px);
+}
+
+.topic-toggle-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.3);
+}
+
+.topic-toggle-button:active {
+    transform: translateY(0);
+    background-color: var(--primary-color-dark);
+}
+/* END: Added styles for Topic Toggle */
+
 .sort-options {
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent shrinking */
     display: flex;
     align-items: center;
     gap: 8px;
+    order: 3; /* Ensure it comes last visually */
+    margin-left: auto; /* Push to the right if space allows */
 }
 .sort-options label {
     font-weight: 600;
@@ -439,10 +484,11 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
-    order: -1;
+    order: -1; /* Keep this to appear before content in default layout */
     flex-shrink: 0;
     height: fit-content;
     line-height: 1.2;
+    /* Adjust position if needed next to post number if flex-direction changes */
 }
 
 
@@ -525,6 +571,26 @@ body {
     .hero-text h1 { font-size: 2.4em; }
     .hero-text p { font-size: 1.1em; }
     .main-content > .container { padding: 25px 30px; }
+
+    .content-header {
+        justify-content: center; /* Center items when wrapping */
+    }
+    .topic-nav {
+        justify-content: center; /* Center topic links */
+        width: 100%; /* Take full width */
+        order: 1;
+    }
+    .topic-toggle-container {
+        order: 2;
+        margin-top: 15px; /* Add space when wrapped */
+    }
+    .sort-options {
+        order: 3;
+        width: 100%; /* Take full width */
+        justify-content: center; /* Center sort options */
+        margin-left: 0; /* Reset margin */
+        margin-top: 15px;
+    }
 }
 
 /* Small Screens (Tablets, Large Phones) - MOBILE NAV ACTIVATION */
@@ -639,20 +705,64 @@ body {
     .hero-text p { font-size: 1.1em; font-family: var(--font-secondary); }
     .hero-image { flex-basis: auto; width: 80%; max-width: 300px; order: 1; }
     .hero-image img { max-height: 300px; box-shadow: var(--shadow-sm); }
-    .content-header { flex-direction: column; gap: 25px; align-items: stretch; padding-bottom: 25px; margin-bottom: 25px; }
-    .topic-nav { width: 100%; justify-content: center; gap: 8px; }
-    .topic-nav a { font-size: 0.85em; padding: 8px 15px; }
-    .topic-nav a:hover { transform: none; }
-    .sort-options { justify-content: center; width: 100%; gap: 10px; }
-    .sort-options select { flex-grow: 1; max-width: none; min-width: 0; padding: 10px 30px 10px 12px; }
+
+    .content-header {
+        flex-direction: column; /* Stack items vertically */
+        align-items: stretch; /* Stretch to full width */
+        gap: 15px; /* Reduce gap */
+        padding-bottom: 25px;
+        margin-bottom: 25px;
+    }
+    .topic-nav {
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+        order: 1; /* Explicit order */
+    }
+    .topic-nav a {
+        font-size: 0.85em;
+        padding: 8px 15px;
+    }
+    .topic-nav a:hover {
+        transform: none;
+    }
+    .topic-toggle-container {
+        width: 100%;
+        justify-content: center;
+        margin: 0; /* Reset margin */
+        order: 2; /* Explicit order */
+    }
+    .topic-toggle-button {
+         width: auto; /* Adjust width as needed */
+         padding: 8px 15px;
+         font-size: 0.85em;
+    }
+    .sort-options {
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+        margin-left: 0; /* Ensure reset */
+        margin-top: 0; /* Reset margin */
+        order: 3; /* Explicit order */
+    }
+    .sort-options select {
+        flex-grow: 1;
+        max-width: none;
+        min-width: 0;
+        padding: 10px 30px 10px 12px;
+    }
+
+    /* Post item adjustments */
     .post-item { flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px; }
     .post-number { align-self: flex-start; margin-bottom: 5px; }
-    .post-content { flex-basis: auto; width: 100%; }
+    .archive-tag { order: 0; /* Place archive tag near number */ margin-bottom: 10px; margin-left: 0; align-self: flex-start; padding: 5px 12px; font-size: 0.7em; }
+    .post-content { flex-basis: auto; width: 100%; order: 1; } /* Content after number/tag */
     .post-content h2 { font-size: 1.3em; }
     .post-body { font-size: 0.95em; max-height: 100px; }
     .post-body.truncated::after { height: 30px; }
-    .archive-tag { position: static; margin-left: 0; margin-top: 10px; align-self: flex-start; order: 5; padding: 5px 12px; font-size: 0.7em; }
-    .post-meta { gap: 8px 15px; font-size: 0.8em; order: 4; }
+    .read-more { order: 2; } /* Read more after body */
+    .post-meta { gap: 8px 15px; font-size: 0.8em; order: 3; } /* Meta after read more */
+
     .pagination-controls { gap: 5px; }
     .pagination-controls button { padding: 8px 12px; font-size: 0.9em; }
     .pagination-controls button:hover:not(:disabled) { transform: none; }
@@ -670,9 +780,11 @@ body {
     .hero-text p { font-size: 1em; }
     .post-content h2 { font-size: 1.2em; }
     .topic-nav a { padding: 7px 12px; font-size: 0.8em; }
+    .topic-toggle-button { padding: 7px 12px; font-size: 0.8em; }
     .sort-options label { font-size: 0.85em; }
     .sort-options select { font-size: 0.9em; }
     .post-item { padding: 15px; }
+    .archive-tag { font-size: 0.65em; padding: 4px 10px; }
     .post-meta { font-size: 0.75em; gap: 6px 12px; }
     .pagination-controls button { padding: 6px 10px; font-size: 0.85em; }
     .pagination-controls .page-info { font-size: 0.85em; margin: 0 5px; }
