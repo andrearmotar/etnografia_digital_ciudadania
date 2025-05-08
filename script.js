@@ -146,14 +146,16 @@ document.addEventListener('DOMContentLoaded', () => {
         "expats": "data/Topic_CRBA/Expats/expats_CRBA_latest_28_posts.json",
         "expatsmexico": "", // Intentionally empty - handled in fetchData
         "immigration": "data/Topic_CRBA/Immigration/Immigration_CRBA.json",
-        "uscis": "data/Topic_CRBA/USCIS/USCIS_CRBA_latest.json"
+        "uscis": "data/Topic_CRBA/USCIS/USCIS_CRBA_latest.json",
+        "complete": "data/Topic_CRBA/complete.json"
     };
 
     const givenBirthDataSources = {
         "expats": "data/Topic_GivenBirthOnMexico/Expats/Expats_given birth in mexico_latest.json",
         "expatsmexico": "data/Topic_GivenBirthOnMexico/mexicoexpats/mexicoexpats_given birth in mexico_latest.json",
         "immigration": "data/Topic_GivenBirthOnMexico/Immigration/Immigration_given birth in mexico_latest.json",
-        "uscis": "data/Topic_GivenBirthOnMexico/USCIS/USCIS_given birth in mexico_latest_posts.json"
+        "uscis": "data/Topic_GivenBirthOnMexico/USCIS/USCIS_given birth in mexico_latest_posts.json",
+        "complete": "data/Topic_GivenBirthOnMexico/complete.json"
     };
 
     let currentDataSources = crbaDataSources; // Start with CRBA data sources
