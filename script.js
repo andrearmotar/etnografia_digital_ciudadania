@@ -1,5 +1,6 @@
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
@@ -126,12 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortSelect = document.getElementById('sort');
     const topicNav = document.getElementById('topicNav');
     const themeToggleContainer = document.getElementById('themeToggleContainer');
+    const postCountDisplay = document.getElementById('postCountDisplay'); // Get the new element
 
     // Check if ALL essential post-loading elements exist before proceeding
-    if (!postList || !paginationControls || !postTemplate || !sortSelect || !topicNav || !themeToggleContainer) {
+    if (!postList || !paginationControls || !postTemplate || !sortSelect || !topicNav || !themeToggleContainer || !postCountDisplay) {
         console.error("One or more essential elements for post display/filtering are missing. Aborting script initialization.");
         if (postList) { // Attempt to display error to user
             postList.innerHTML = '<p style="color: red; text-align: center;">Error: Page components could not be loaded correctly.</p>';
+        }
+        if (postCountDisplay) {
+            postCountDisplay.textContent = "Error de carga";
         }
         return; // Stop script execution if core elements are missing
     }
@@ -160,6 +165,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentDataSources = crbaDataSources; // Start with CRBA data sources
 
+    // --- Function to update post count display ---
+    function updatePostCountDisplayMessage(count) {
+        if (postCountDisplay) {
+            if (count > 0) {
+                postCountDisplay.textContent = `Número de post${count === 1 ? '' : 's'}: ${count} `;
+            } else {
+                // Check if the message is already "Cargando posts..." to avoid overriding it immediately
+                if (postList.innerHTML.includes('Cargando posts...')) {
+                     postCountDisplay.textContent = 'Cargando...'; // Or keep it as is from fetchData loading state
+                } else {
+                    postCountDisplay.textContent = 'Resultados: 0 posts';
+                }
+            }
+        }
+    }
+
+
     // --- Function to get current active theme name ---
     function getActiveThemeName() {
         const activeThemeButton = themeToggleContainer.querySelector('.active-theme');
@@ -183,12 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
             postList.innerHTML = `<p style="text-align: center; color: orange;">No hay datos disponibles para ${topicName} sobre ${themeName}.</p>`;
             paginationControls.innerHTML = '';
             postsData.length = 0;
+            updatePostCountDisplayMessage(0); // Update count
             sortSelect.disabled = true;
             return;
         }
 
         // Show loading state
         postList.innerHTML = '<p style="text-align: center; color: var(--text-light);">Cargando posts...</p>';
+        if (postCountDisplay) postCountDisplay.textContent = 'Cargando posts...'; // Update count display during load
         paginationControls.innerHTML = '';
         sortSelect.disabled = true; // Disable sort while loading
 
@@ -212,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  postsData.length = 0; // Clear previous data
                  postsData.push(...data);
                  console.log(`Fetched ${postsData.length} posts for theme "${themeName}".`);
+                 updatePostCountDisplayMessage(postsData.length); // Update count
                  sortPostsData(sortSelect.value); // Apply current sort
                  renderPage(1, scrollToTopOnRender); // Render page 1, respecting scroll preference
                  sortSelect.disabled = postsData.length === 0; // Enable sort only if posts exist
@@ -219,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  console.error("Fetched data is not in the expected array format.", data);
                  postList.innerHTML = `<p style="color: red; text-align: center;">Error en el formato de los datos recibidos para ${themeName}.</p>`;
                  postsData.length = 0;
+                 updatePostCountDisplayMessage(0); // Update count
                  sortSelect.disabled = true;
             }
 
@@ -227,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Provide a more informative error message to the user
             postList.innerHTML = `<p style="color: red; text-align: center;">Fallo la carga de los Posts para ${themeName}. (${error.message || 'Unknown error'})</p>`;
             postsData.length = 0;
+            updatePostCountDisplayMessage(0); // Update count
             sortSelect.disabled = true;
         }
     }
@@ -237,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         postList.innerHTML = ''; // Clear previous posts
 
         if (postsData.length === 0) {
+            // updatePostCountDisplayMessage(0) is already called by fetchData in this case
             // Check if a specific fetch error isn't already displayed
             if (!postList.querySelector('p[style*="color: red"]') && !postList.querySelector('p[style*="color: orange"]')) {
                 const topicName = getActiveTopicName();
@@ -325,7 +353,19 @@ document.addEventListener('DOMContentLoaded', () => {
             setMeta('.meta-sex', postData?.sex);
             setMeta('.meta-president', postData?.us_president);
             setMeta('.meta-document', postData?.document);
-            setMeta('.meta-created', postData?.created_readable_utc);
+
+            const date = new Date(postData?.created_readable_utc);
+
+            const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC'
+            };
+
+            const readableDate = new Intl.DateTimeFormat('es-ES', options).format(date);
+
+            setMeta('.meta-created', readableDate);
 
             // Archive Tag
             const archiveTag = clone.querySelector('.archive-tag');
@@ -337,6 +377,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     archiveTag.style.display = 'none';
                 }
             }
+
+            // START: Populate Reddit Link
+            const redditLink = clone.querySelector('.meta-reddit-link');
+            if (redditLink) {
+                if (postData?.permalink) {
+                    redditLink.href = `${postData.permalink}`;
+                    redditLink.style.display = 'inline-flex'; // Show the link (matches CSS for other meta items)
+                } else {
+                    redditLink.style.display = 'none'; // Keep hidden if no permalink
+                    // console.warn("Permalink missing for post:", postData?.title);
+                }
+            }
+            // END: Populate Reddit Link
+
 
             return postItem; // Return the fully constructed element
 
@@ -475,20 +529,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
      // --- Function to Parse Date (Added slightly more robust check) ---
      function parseDate(dateString) {
-         if (!dateString || typeof dateString !== 'string') return 0;
-         try {
-             const date = new Date(dateString.replace(' ', 'T') + 'Z'); // Assume UTC, handle potential space separator
-             // Check if parsing resulted in a valid date number
-             if (!isNaN(date.getTime())) {
-                 return date.getTime();
-             }
-             console.warn(`Could not parse date string: ${dateString}`);
-             return 0; // Return 0 for invalid dates
-         } catch (e) {
-             console.error(`Error parsing date string: ${dateString}`, e);
-             return 0;
-         }
-     }
+        // 1. Basic validation for input type
+        if (!dateString || typeof dateString !== 'string') {
+            // console.warn('Invalid input: dateString must be a non-empty string.'); // Optional: more specific warning
+            return 0; // Or throw an error, depending on desired behavior
+        }
+    
+        try {
+            let parsableString = dateString.trim(); // Remove leading/trailing whitespace
+    
+        
+            if (parsableString.endsWith(' UTC')) {
+                parsableString = parsableString.slice(0, -4);
+            }
+    
+            
+            parsableString = parsableString.replace(' ', 'T');
+    
+        
+            const timezonePattern = /[Zz]|[+-]\d{2}(:?\d{2})?$/; // Matches Z, z, +HH, +HHMM, +HH:MM
+            if (!timezonePattern.test(parsableString)) {
+                parsableString += 'Z';
+            }
+            
+            const date = new Date(parsableString);
+    
+            // 5. Check if parsing resulted in a valid date
+            if (!isNaN(date.getTime())) {
+                return date.getTime(); // Return Unix timestamp (milliseconds)
+            }
+    
+            // console.warn(`Could not parse date string: "${dateString}" (processed to "${parsableString}")`);
+            return 0; // Return 0 for invalid dates
+        } catch (e) {
+            
+            return 0;
+        }
+    }
 
     // --- Function to Sort Posts (No changes needed, relies on safe parsing) ---
     function sortPostsData(sortBy) {
@@ -592,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newUrl = getCurrentTopicUrl(); // Will now use clickedLink as active
 
         // Reset sort and page, then fetch
-        sortSelect.value = 'comments_high';
+        sortSelect.value = 'comments_high'; // Default sort
         currentPage = 1;
         fetchData(newUrl, false); // Fetch new topic data, don't scroll top
     });
@@ -628,15 +705,13 @@ document.addEventListener('DOMContentLoaded', () => {
             themeSwitchedTo = 'Given Birth';
         } else {
             console.error("Unknown theme state encountered:", newState);
-            // Fallback or error state? Revert to default?
              currentDataSources = crbaDataSources; // Revert to default
-             // Optionally visually reset the buttons too
             return; // Stop processing if state is unknown
         }
         console.log(`Theme switched to ${themeSwitchedTo}`);
 
         // Reset sort dropdown and page number
-        sortSelect.value = 'comments_high';
+        sortSelect.value = 'comments_high'; // Default sort
         currentPage = 1;
 
         // Re-fetch data for the *currently selected* subreddit using the *new* data source set
@@ -671,8 +746,8 @@ document.addEventListener('DOMContentLoaded', () => {
                  console.warn("No initial active topic link found, activating the first one.");
              } else {
                  console.error("No topic links found in #topicNav during initialization.");
-                 // Display error to user?
-                 postList.innerHTML = '<p style="color: red; text-align: center;">Error: No topics found.</p>';
+                 if (postList) postList.innerHTML = '<p style="color: red; text-align: center;">Error: No topics found.</p>';
+                 updatePostCountDisplayMessage(0);
                  return; // Cannot proceed without topics
              }
          }
@@ -691,4 +766,3 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePage();
 
 }); // End DOMContentLoaded
-

@@ -1,5 +1,3 @@
-
-
 /* Basic Reset */
 * {
     margin: 0;
@@ -222,23 +220,22 @@ body {
 }
 .content-header {
     display: flex;
-    justify-content: space-between; /* Keep space-between */
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allow wrapping */
-    gap: 20px; /* Adjust gap as needed */
+    flex-wrap: wrap;
+    gap: 20px;
     margin-bottom: 35px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--border-color-light);
 }
+
 .topic-nav {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    /* Removed flex-grow to allow toggle/sort to align right easier */
-    /* flex-grow: 1;  */
-    justify-content: flex-start; /* Align left */
-    order: 1; /* Ensure it comes first visually */
-    margin-right: auto; /* Push toggle/sort to the right */
+    justify-content: flex-start;
+    order: 0; /* First item */
+    margin-right: auto; /* Pushes subsequent items (theme, sort, count) to the right */
 }
 .topic-nav a {
     text-decoration: none;
@@ -266,20 +263,25 @@ body {
     transform: translateY(0);
 }
 
-/* START: Updated styles for Theme Toggle */
 .theme-toggle-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Gap between the two buttons */
-    flex-shrink: 0; /* Prevent shrinking */
-    order: 2; /* Place between nav and sort */
+    gap: 10px;
+    flex-shrink: 0;
+    order: 1; /* Second item overall, first in the right-hand group */
 }
-
+.theme-toggle-container p {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text-medium);
+    margin-right: 5px;
+    white-space: nowrap;
+}
 .theme-toggle-option {
     background-color: var(--bg-white);
     color: var(--text-medium);
     border: 1px solid var(--border-color);
-    padding: 10px 18px; /* Adjust padding */
+    padding: 10px 18px;
     border-radius: var(--border-radius-pill);
     font-family: inherit;
     font-size: 0.9em;
@@ -289,42 +291,35 @@ body {
     white-space: nowrap;
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow 0.2s ease;
 }
-
-.theme-toggle-option:hover:not(.active-theme) { /* Hover only on inactive */
+.theme-toggle-option:hover:not(.active-theme) {
     background-color: var(--border-color-light);
     border-color: #bbb;
     color: var(--text-dark);
 }
-
 .theme-toggle-option.active-theme {
     background-color: var(--primary-color);
     color: var(--bg-white);
     border-color: var(--primary-color-dark);
     font-weight: 700;
-    cursor: default; /* Indicate it's selected */
+    cursor: default;
     box-shadow: 0 2px 4px rgba(255, 102, 0, 0.2);
 }
-
 .theme-toggle-option:focus {
     outline: none;
-     /* Add focus ring only if not active, or a different style for active */
 }
 .theme-toggle-option:focus:not(.active-theme) {
-     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4); /* Standard blue focus */
+     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4);
 }
 .theme-toggle-option.active-theme:focus {
-     box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.4); /* Orange focus for active */
+     box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.4);
 }
 
-/* END: Updated styles for Theme Toggle */
-
 .sort-options {
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 8px;
-    order: 3; /* Ensure it comes last visually */
-    /* margin-left: auto; Removed this, handled by topic-nav margin-right */
+    order: 2; /* Third item overall, second in the right-hand group */
 }
 .sort-options label {
     font-weight: 600;
@@ -357,6 +352,19 @@ body {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+}
+
+/* Post Count Display */
+.post-count-display {
+    font-size: 0.95em;
+    color: var(--text-medium);
+    font-weight: 600;
+    /* margin-left: 20px; */ /* Let gap handle spacing */
+    order: 3; /* Fourth item overall, last in the right-hand group or last when stacked */
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.5;
+    padding: 8px 0;
 }
 
 
@@ -444,11 +452,11 @@ body {
     display: none;
 }
 .read-more {
-    display: inline-block; /* Changed from none by JS if needed */
+    display: inline-block;
     text-decoration: none;
     color: var(--primary-color);
     font-weight: 700;
-    margin-top: auto; /* Pushes meta down if content is short */
+    margin-top: auto;
     margin-bottom: 15px;
     cursor: pointer;
     align-self: flex-start;
@@ -460,7 +468,7 @@ body {
     text-decoration: underline;
 }
 .post-meta {
-    margin-top: auto; /* Pushes to bottom */
+    margin-top: auto;
     padding-top: 15px;
     border-top: 1px solid var(--border-color-light);
     font-size: 0.85em;
@@ -475,19 +483,57 @@ body {
     align-items: center;
     gap: 6px;
 }
-.post-meta span > span { /* Style for the actual value */
+.post-meta span > span {
     color: var(--text-medium);
     font-weight: 500;
 }
 .post-meta i {
     color: var(--text-light);
     font-size: 1.1em;
-    width: 16px; /* Give icon consistent width */
+    width: 16px;
     text-align: center;
 }
+
+/* --- Reddit Link Button in Post Meta --- */
+.meta-reddit-link {
+    display: inline-flex; /* Align icon and text, allow padding */
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+    padding: 6px 12px; /* Button padding */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    background-color: var(--primary-color-light); /* Light orange background */
+    color: var(--primary-color-dark); /* Darker orange text */
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1em; /* Relative to .post-meta font-size */
+    border: 1px solid var(--primary-color); /* Orange border */
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+.meta-reddit-link i.fab.fa-reddit-alien {
+    color: inherit; /* Icon inherits text color from the link */
+}
+.meta-reddit-link:hover,
+.meta-reddit-link:focus {
+    background-color: var(--primary-color); /* Orange background on hover */
+    color: var(--bg-white); /* White text on hover */
+    border-color: var(--primary-color-dark); /* Darker orange border on hover */
+    text-decoration: none;
+    transform: translateY(-1px); /* Slight lift effect */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+.meta-reddit-link:active {
+    transform: translateY(0px); /* Press down effect */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
 .archive-tag {
-    margin-left: auto; /* Push to the right */
-    align-self: flex-start; /* Align to top */
+    margin-left: auto;
+    align-self: flex-start;
     border-radius: var(--border-radius-pill);
     background-color: var(--primary-color);
     color: #fff;
@@ -496,11 +542,10 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
-    order: -1; /* Keep this to appear before content in default flex layout */
+    order: -1;
     flex-shrink: 0;
     height: fit-content;
     line-height: 1.2;
-    /* Position may need adjustment if flex-direction changes */
 }
 
 
@@ -539,6 +584,24 @@ body {
     background-color: var(--primary-color-dark);
     transform: translateY(-2px);
 }
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.meta-comments span{
+    font-weight: normal;
+}
+
+.meta-created span{
+    font-weight: normal;
+}
+
 .pagination-controls button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
@@ -566,43 +629,49 @@ body {
     .container {
         max-width: 960px;
     }
-    /* Allow header content (logo, nav) to wrap if needed */
-    .page-header .container {
-        /* flex-wrap: wrap; Already set in base */
-    }
-    /* Ensure nav aligns left below logo when wrapped */
     .main-nav {
-        justify-content: flex-start; /* Override base 'flex-end' */
-        width: 100%; /* Take full width when wrapped */
+        justify-content: flex-start;
+        width: 100%;
     }
 
-    /* Other 992px styles */
     .hero-content { gap: 40px; }
     .hero-text h1 { font-size: 2.4em; }
     .hero-text p { font-size: 1.1em; }
     .main-content > .container { padding: 25px 30px; }
 
     .content-header {
-        justify-content: center; /* Center items when wrapping */
+        justify-content: center;
+        gap: 15px;
     }
     .topic-nav {
-        justify-content: center; /* Center topic links */
-        width: 100%; /* Take full width */
-        order: 1;
-        margin-right: 0; /* Reset margin */
+        justify-content: center;
+        width: 100%;
+        order: 0; /* Stays first when stacked */
+        margin-right: 0;
     }
     .theme-toggle-container {
-        order: 2;
-        margin-top: 15px; /* Add space when wrapped */
-        justify-content: center; /* Center toggle buttons */
+        order: 1; /* Stays second when stacked */
+        margin-top: 0;
+        justify-content: center;
         width: 100%;
     }
+    .theme-toggle-container p {
+        margin-right: 10px;
+    }
     .sort-options {
-        order: 3;
-        width: 100%; /* Take full width */
-        justify-content: center; /* Center sort options */
-        margin-left: 0; /* Reset margin */
-        margin-top: 15px;
+        order: 2; /* Stays third when stacked */
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        margin-top: 0;
+    }
+    .post-count-display {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+        order: 3; /* Stays last when stacked */
+        padding: 5px 0;
+        margin-top: 0;
     }
 }
 
@@ -611,83 +680,66 @@ body {
     .container { padding: 0 15px; }
     .main-content > .container { margin: 0 10px; padding: 20px; border-radius: var(--border-radius-md); }
 
-    /* --- START: Mobile Header Overrides --- */
     .page-header .container {
-        flex-direction: row; /* Keep side-by-side */
-        justify-content: space-between; /* Logo left, Toggle right */
-        flex-wrap: nowrap; /* Prevent toggle wrapping */
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
     }
     .logo { font-size: 2em; margin-bottom: 0; }
 
-    /* Show Menu Toggle Button */
     .menu-toggle {
-        display: block; /* Override display: none */
-        order: 3; /* Ensure it's last visually if needed */
+        display: block;
+        order: 3;
     }
 
-    /* Mobile Navigation Styling Overrides */
     .main-nav {
-        /* Structure & Positioning */
-        display: none; /* Hide by default, JS handles display:flex */
+        display: none;
         position: absolute;
-        top: 100%; /* Position below header */
+        top: 100%;
         left: 0;
         right: 0;
         width: 100%;
-        flex-direction: column; /* Stack items vertically */
-        align-items: stretch; /* Stretch items full width */
+        flex-direction: column;
+        align-items: stretch;
         justify-content: flex-start;
-        gap: 0; /* Remove horizontal gap */
-
-        /* Appearance */
+        gap: 0;
         background-color: var(--bg-white);
         box-shadow: var(--shadow-md);
         border-top: 1px solid var(--border-color-light);
-        padding: 0; /* Initial padding is 0 */
-
-        /* Hiding & Animation State */
+        padding: 0;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
         visibility: hidden;
-
-        /* Transition */
         transition: max-height var(--nav-transition-duration) ease-in-out,
                     opacity calc(var(--nav-transition-duration) * 0.75) ease-in-out,
                     visibility 0s linear var(--nav-transition-duration),
                     padding var(--nav-transition-duration) ease-in-out;
         z-index: 999;
     }
-
-    /* State when menu is open (JS adds .nav-open) */
     .main-nav.nav-open {
-        max-height: 70vh; /* Allow scrolling */
+        max-height: 70vh;
         opacity: 1;
         visibility: visible;
-        padding: 10px 0; /* Add padding back */
+        padding: 10px 0;
         overflow-y: auto;
-        /* Adjust transition for opening */
         transition: max-height var(--nav-transition-duration) ease-in-out,
                     opacity calc(var(--nav-transition-duration) * 0.75) ease-in-out calc(var(--nav-transition-duration) * 0.25),
                     visibility 0s linear 0s,
                     padding var(--nav-transition-duration) ease-in-out;
     }
-
-    /* Mobile Navigation Link Overrides */
     .main-nav a {
-        padding: 15px 20px; /* Adjust padding */
-        border-radius: 0; /* Remove rounding */
-        text-align: center; /* Center text */
-        font-size: 1rem; /* Adjust font size */
-        border-bottom: 1px solid var(--border-color-light); /* Add separators */
-        transition: background-color 0.2s ease, color 0.2s ease; /* Simpler transition */
-        white-space: normal; /* Allow wrapping if needed */
+        padding: 15px 20px;
+        border-radius: 0;
+        text-align: center;
+        font-size: 1rem;
+        border-bottom: 1px solid var(--border-color-light);
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: normal;
     }
     .main-nav a:last-child {
         border-bottom: none;
     }
-
-    /* Mobile Hover/Active State Overrides */
     .main-nav a:hover {
         background-color: var(--primary-color-light);
         color: var(--primary-color-dark);
@@ -697,20 +749,14 @@ body {
         color: var(--bg-white);
         font-weight: 700;
     }
-
-    /* Mobile Prefix Styling Overrides */
-    .main-nav a span {
-        /* Inherits color */
-    }
+    .main-nav a span {}
     .main-nav a:hover span {
         color: var(--primary-color-dark);
     }
     .main-nav a.active span {
         color: rgba(255, 255, 255, 0.85);
     }
-    /* --- END: Mobile Header Overrides --- */
 
-    /* --- Other 768px styles --- */
     .hero { padding: 40px 0; }
     .hero-content { flex-direction: column; text-align: center; gap: 30px; }
     .hero-text { max-width: 100%; min-width: unset; order: 2; }
@@ -720,18 +766,15 @@ body {
     .hero-image img { max-height: 300px; box-shadow: var(--shadow-sm); }
 
     .content-header {
-        flex-direction: column; /* Stack items vertically */
-        align-items: stretch; /* Stretch to full width */
-        gap: 15px; /* Reduce gap */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
         padding-bottom: 25px;
         margin-bottom: 25px;
     }
-    .topic-nav {
-        width: 100%;
-        justify-content: center;
-        gap: 8px;
-        order: 1; /* Explicit order */
-        margin-right: 0; /* Ensure reset */
+    /* Orders for .topic-nav, .theme-toggle-container, .sort-options, .post-count-display are inherited */
+    .post-count-display {
+        font-size: 0.9em;
     }
     .topic-nav a {
         font-size: 0.85em;
@@ -740,25 +783,13 @@ body {
     .topic-nav a:hover {
         transform: none;
     }
-    .theme-toggle-container {
-        width: 100%;
-        justify-content: center;
-        margin: 0; /* Reset margin */
-        order: 2; /* Explicit order */
-        gap: 8px; /* Reduce gap */
+    .theme-toggle-container p {
+        font-size: 0.85em;
     }
     .theme-toggle-option {
-         width: auto; /* Adjust width as needed */
+         width: auto;
          padding: 8px 15px;
          font-size: 0.85em;
-    }
-    .sort-options {
-        justify-content: center;
-        width: 100%;
-        gap: 10px;
-        margin-left: 0; /* Ensure reset */
-        margin-top: 0; /* Reset margin */
-        order: 3; /* Explicit order */
     }
     .sort-options select {
         flex-grow: 1;
@@ -767,16 +798,15 @@ body {
         padding: 10px 30px 10px 12px;
     }
 
-    /* Post item adjustments */
     .post-item { flex-direction: column; align-items: flex-start; padding: 20px; gap: 15px; }
     .post-number { align-self: flex-start; margin-bottom: 5px; }
-    .archive-tag { order: 0; /* Place archive tag near number */ margin-bottom: 10px; margin-left: 0; align-self: flex-start; padding: 5px 12px; font-size: 0.7em; }
-    .post-content { flex-basis: auto; width: 100%; order: 1; } /* Content after number/tag */
+    .archive-tag { order: 0; margin-bottom: 10px; margin-left: 0; align-self: flex-start; padding: 5px 12px; font-size: 0.7em; }
+    .post-content { flex-basis: auto; width: 100%; order: 1; }
     .post-content h2 { font-size: 1.3em; }
-    .post-body { font-size: 0.95em; max-height: 100px; } /* Adjust mobile truncation */
+    .post-body { font-size: 0.95em; max-height: 100px; }
     .post-body.truncated::after { height: 30px; }
-    .read-more { order: 2; } /* Read more after body */
-    .post-meta { gap: 8px 15px; font-size: 0.8em; order: 3; } /* Meta after read more */
+    .read-more { order: 2; }
+    .post-meta { gap: 8px 15px; font-size: 0.8em; order: 3; }
 
     .pagination-controls { gap: 5px; }
     .pagination-controls button { padding: 8px 12px; font-size: 0.9em; }
@@ -790,18 +820,22 @@ body {
     .main-content > .container { padding: 15px; margin: 0 5px; }
     .logo { font-size: 1.8em; }
     .menu-toggle { font-size: 1.6em; }
-    .main-nav a { padding: 12px 15px; font-size: 0.95rem; } /* Mobile link styles apply */
+    .main-nav a { padding: 12px 15px; font-size: 0.95rem; }
     .hero-text h1 { font-size: 1.7em; }
     .hero-text p { font-size: 1em; }
-    .post-content h2 { font-size: 1.2em; }
+
+    /* Orders for .topic-nav, .theme-toggle-container, .sort-options, .post-count-display are inherited */
+    .post-count-display { font-size: 0.85em; padding: 3px 0; }
     .topic-nav a { padding: 7px 12px; font-size: 0.8em; }
+    .theme-toggle-container p { font-size: 0.8em; }
     .theme-toggle-option { padding: 7px 12px; font-size: 0.8em; }
     .sort-options label { font-size: 0.85em; }
     .sort-options select { font-size: 0.9em; }
+
+    .post-content h2 { font-size: 1.2em; }
     .post-item { padding: 15px; }
     .archive-tag { font-size: 0.65em; padding: 4px 10px; }
     .post-meta { font-size: 0.75em; gap: 6px 12px; }
     .pagination-controls button { padding: 6px 10px; font-size: 0.85em; }
     .pagination-controls .page-info { font-size: 0.85em; margin: 0 5px; }
 }
-
